@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { SiteSettings } from "@/types/content";
 import { Nav } from "./nav";
@@ -12,7 +13,14 @@ export function Header({ settings }: { settings: SiteSettings }) {
         Skip to content
       </a>
       <div className="relative mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-        <Link href="/" className="flex items-baseline gap-2">
+        <Link href="/" className="flex items-center gap-2.5">
+          <Image
+            src="/btv-logo.png"
+            alt=""
+            width={44}
+            height={50}
+            className="h-9 w-auto"
+          />
           <span className="font-display text-lg font-black tracking-tight text-foam">
             BLUE TEAM VILLAGE
           </span>
