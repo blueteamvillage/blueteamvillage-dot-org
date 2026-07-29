@@ -5,6 +5,7 @@ import { Prose } from "@/components/rich-text";
 import { Timeline } from "@/components/site/timeline";
 import { getPage } from "@/lib/contentful";
 import { fallbackMilestones } from "@/lib/fallback-content";
+import { pageMeta } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -15,10 +16,11 @@ export const revalidate = 3600;
  */
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage("about");
-  return {
+  return pageMeta({
     title: page?.title ?? "About",
     description: page?.seoDescription,
-  };
+    path: "/about",
+  });
 }
 
 export default async function AboutPage() {

@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { Prose } from "@/components/rich-text";
+import { JsonLd } from "@/components/seo/json-ld";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getProgram, getPrograms, getSiteSettings } from "@/lib/contentful";
+import { breadcrumbSchema } from "@/lib/schema";
+import { pageMeta } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -22,7 +25,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const program = await getProgram(slug);
   if (!program) return {};
-  return { title: program.name, description: program.summary };
+  return pageMeta({
+    title: program.name,
+    description: program.summary,
+    path: `/programs/${program.slug}`,
+  });
 }
 
 export default async function ProgramPage({ params }: Props) {
@@ -35,6 +42,13 @@ export default async function ProgramPage({ params }: Props) {
 
   return (
     <article>
+      <JsonLd
+        data={breadcrumbSchema([
+          ["Home", "/"],
+          ["Programs", "/programs"],
+          [program.name, `/programs/${program.slug}`],
+        ])}
+      />
       <PageHeader
         eyebrow="Program"
         heading={program.name}

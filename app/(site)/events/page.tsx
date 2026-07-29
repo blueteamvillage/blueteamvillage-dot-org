@@ -4,14 +4,16 @@ import { ArrowRight } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { Badge } from "@/components/ui/badge";
 import { getEvents } from "@/lib/contentful";
+import { pageMeta } from "@/lib/seo";
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Events",
   description:
     "Blue Team Village events — a venue for defenders at DEF CON since 2018.",
-};
+  path: "/events",
+});
 
 export default async function EventsPage() {
   const events = await getEvents();

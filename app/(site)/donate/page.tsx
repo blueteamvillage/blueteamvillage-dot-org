@@ -3,14 +3,16 @@ import { PageHeader } from "@/components/page-header";
 import { Prose } from "@/components/rich-text";
 import { Button } from "@/components/ui/button";
 import { getPage, getSiteSettings } from "@/lib/contentful";
+import { pageMeta } from "@/lib/seo";
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Donate",
   description:
     "Make a tax-deductible donation to Blue Team Village, a 501(c)(3) public charity supporting the cyber defender community.",
-};
+  path: "/donate",
+});
 
 export default async function DonatePage() {
   const [page, settings] = await Promise.all([

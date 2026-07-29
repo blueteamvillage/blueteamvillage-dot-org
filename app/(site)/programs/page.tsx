@@ -3,14 +3,16 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { getPrograms } from "@/lib/contentful";
+import { pageMeta } from "@/lib/seo";
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Programs",
   description:
     "Blue Team Village programs — directed by BTV Directors and built by volunteers, running year-round.",
-};
+  path: "/programs",
+});
 
 export default async function ProgramsPage() {
   const programs = await getPrograms();

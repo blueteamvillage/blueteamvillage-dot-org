@@ -1,33 +1,20 @@
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
+import { JsonLd } from "@/components/seo/json-ld";
 import { ScanlineOverlay } from "@/components/site/scanline-overlay";
 import { getSiteSettings } from "@/lib/contentful";
+import { organizationSchema } from "@/lib/schema";
 
 export default async function SiteLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const settings = await getSiteSettings();
 
-  /* Ties the accounts to the organization for search engines, so BTV's own
-   * profiles outrank impersonators. Escaping "<" per the Next JSON-LD guide. */
-  const orgJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "NGO",
-    name: settings.siteName,
-    url: "https://blueteamvillage.org",
-    logo: "https://blueteamvillage.org/btv-logo.png",
-    description: settings.tagline,
-    sameAs: settings.socialLinks.map((s) => s.href),
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(orgJsonLd).replace(/</g, "\\u003c"),
-        }}
-      />
+      {/* Ties BTV's social accounts to the organization, so its own profiles
+       * are the ones search engines treat as authoritative. */}
+      <JsonLd data={organizationSchema(settings)} />
       {/* CRT chrome sits at z-10; all real content rides above it at z-20. */}
       <ScanlineOverlay />
       <Header settings={settings} />

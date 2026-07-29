@@ -45,7 +45,9 @@ function SponsorCard({ sponsor }: { sponsor: Sponsor }) {
         <span className="flex h-20 w-full items-center justify-center rounded-md bg-white px-4 py-2.5">
           <img
             src={logoSrc(sponsor.logoUrl)}
-            alt={sponsor.name}
+            /* Decorative: the name is right below in text, and repeating it
+               here makes screen readers announce each sponsor twice. */
+            alt=""
             className="h-full w-auto max-w-full object-contain"
             loading="lazy"
           />

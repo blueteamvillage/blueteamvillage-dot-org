@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { Prose } from "@/components/rich-text";
 import { getPage, getPages } from "@/lib/contentful";
+import { pageMeta } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -23,7 +24,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const page = await getPage(slug);
   if (!page) return {};
-  return { title: page.title, description: page.seoDescription };
+  return pageMeta({
+    title: page.title,
+    description: page.seoDescription,
+    path: `/${page.slug}`,
+  });
 }
 
 export default async function CmsPage({ params }: Props) {
