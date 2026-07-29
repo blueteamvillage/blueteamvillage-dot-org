@@ -6,7 +6,7 @@ import { Eyebrow } from "@/components/site/eyebrow";
 import { SponsorGrid } from "@/components/sponsor-grid";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getEvent, getEvents } from "@/lib/contentful";
+import { getCurrentSponsors, getEvent, getEvents } from "@/lib/contentful";
 
 export const revalidate = 3600;
 
@@ -28,6 +28,12 @@ export default async function EventPage({ params }: Props) {
   const { slug } = await params;
   const event = await getEvent(slug);
   if (!event) notFound();
+
+  /*
+   * For the current event the live roster is authoritative (it carries logos
+   * and blurbs); past events keep their own linked list as the year's record.
+   */
+  const sponsors = event.isCurrent ? await getCurrentSponsors() : event.sponsors;
 
   return (
     <article>
@@ -66,12 +72,12 @@ export default async function EventPage({ params }: Props) {
           </div>
         )}
 
-        {event.sponsors.length > 0 && (
+        {sponsors.length > 0 && (
           <section className="mt-16">
             <Eyebrow>Partners in defense</Eyebrow>
             <h2 className="mt-3 text-2xl font-black text-white">Sponsors</h2>
             <div className="mt-6">
-              <SponsorGrid sponsors={event.sponsors} />
+              <SponsorGrid sponsors={sponsors} />
             </div>
           </section>
         )}

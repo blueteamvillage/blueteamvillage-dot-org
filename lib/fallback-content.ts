@@ -67,55 +67,72 @@ export const fallbackSettings: SiteSettings = {
   ],
 };
 
+const ASSETS = "https://images.ctfassets.net/mgfsp0s6h7v2";
+
 /*
- * Blurbs match the copy running on ctf.blueteamvillage.org for the sponsors
- * both sites carry, so a sponsor reads the same either place they land.
+ * The DEF CON 34 roster, mirroring the Contentful "sponsor" entries that
+ * ctf.blueteamvillage.org also reads — names, tiers, blurbs, and logo assets
+ * are copied from there verbatim. Contentful is authoritative; this exists so
+ * local dev and CI render the real thing without secrets. There is no Blue
+ * sponsor for DC34, which is why the home page shows the Blue-tier pitch.
  */
-const blurbs: Record<string, string> = {
-  Graylog:
-    "Log management and SIEM built for defenders — centralize, search, and alert on the telemetry that matters.",
-  "Hack The Box":
-    "Equip threat-ready cyber teams for an AI-accelerated landscape with hands-on labs, assessments, and pathways that build top performing teams.",
-  "Detection Engineering Weekly":
-    "The latest news and how-tos in detection engineering, delivered weekly to practitioners in the field.",
-  Expel:
-    "Agentic MDR means AI speed, without tradeoffs. Tech makes you fast. Humans make you accurate. You keep your tools, your visibility, and your control.",
-  DeepTempo:
-    "Helps security teams identify modern attacks earlier using AI-powered behavioral detection — catching attacker intent that rules and signatures miss.",
-  TryHackMe:
-    "Hands-on cyber security training through real-world scenarios — making learning to defend accessible for everyone, everywhere.",
-  FRSecure:
-    "Information security experts on a mission to fix a broken industry — consulting, training, and CISSP education for defenders.",
-  FLARE: "Continuous threat exposure management across the clear and dark web.",
-  ACyberGurus:
-    "Cybersecurity training and advisory services for teams building defensive capability.",
-};
-
-function sponsor(name: string, tier: Sponsor["tier"], url: string): Sponsor {
-  return { name, tier, url, blurb: blurbs[name] };
-}
-
-const dc34Sponsors: Sponsor[] = [
-  sponsor("Graylog", "Blue", "https://graylog.org"),
-  sponsor("Hack The Box", "Platinum", "https://hackthebox.com"),
-  sponsor(
-    "Detection Engineering Weekly",
-    "Gold",
-    "https://detectionengineering.net",
-  ),
-  sponsor("Expel", "Gold", "https://expel.com"),
-  sponsor("DeepTempo", "Gold", "https://deeptempo.ai"),
-  sponsor("FRSecure", "Gold", "https://frsecure.com"),
-  sponsor("TryHackMe", "Gold", "https://tryhackme.com"),
+export const fallbackCurrentSponsors: Sponsor[] = [
+  {
+    name: "Hack The Box",
+    tier: "Platinum",
+    url: "https://www.hackthebox.com/",
+    logoUrl: `${ASSETS}/6mxNhdwA95hwceRpnRhmGA/e5a06bee47e3510f485005e797527c55/Hack_The_Box_Logo_2.png`,
+    blurb:
+      "Equip threat-ready cyber teams for an AI-accelerated landscape with hands-on labs, assessments, and pathways that build top performing teams.",
+  },
+  {
+    name: "DeepTempo",
+    tier: "Gold",
+    url: "https://www.deeptempo.ai/",
+    logoUrl: `${ASSETS}/yA1vIIjgc7cXjDum3uLiL/0e801561ea38b7be2c73a20be763ba6a/image.png`,
+    blurb:
+      "DeepTempo helps security teams identify modern attacks earlier using AI-powered behavioral detection. Built to work alongside existing SIEM, NDR, and telemetry environments, DeepTempo detects attacker intent and suspicious behavioral patterns that traditional rules, signatures, and static baselines often miss.",
+  },
+  {
+    name: "Detection Engineering Weekly",
+    tier: "Gold",
+    url: "https://www.detectionengineering.net/",
+    logoUrl: `${ASSETS}/7hdWHGpOSrzt0290ZUvFde/e17d97bfbaedfc7358fb810fbfeae725/image.png`,
+    blurb: "The latest news and how-tos in detection engineering",
+  },
+  {
+    name: "Expel",
+    tier: "Gold",
+    url: "https://expel.com/",
+    logoUrl: `${ASSETS}/75AbHB4jIG9ZTjLNaJchpg/27d162a856b26f36884f9ea294213114/image.png`,
+    blurb:
+      "Agentic MDR means AI speed, without tradeoffs. Tech makes you fast. Humans make you accurate. You keep your tools, your visibility, and your control.",
+  },
+  {
+    name: "FRSecure",
+    tier: "Gold",
+    url: "https://frsecure.com/",
+    logoUrl: `${ASSETS}/5iDMu1wnjyjEVSALKrP6LV/7e3f7396f47c93f497b70bde4e573efd/image.png`,
+    blurb:
+      "Information Security Experts on a Mission, To Fix A Broken Industry",
+  },
+  {
+    name: "TryHackMe",
+    tier: "Gold",
+    url: "https://tryhackme.com/",
+    logoUrl: `${ASSETS}/3LAThx0ryfYlWHsslU7JJa/837a486a56b60271bfda7b2d94188fc9/image.png`,
+    blurb: "Hands-on cyber security training through real-world scenarios",
+  },
 ];
 
+/* Historical rosters, kept as the per-year record. */
 const dc33Sponsors: Sponsor[] = [
-  sponsor("Graylog", "Blue", "https://graylog.org"),
-  sponsor("Hack The Box", "Platinum", "https://hackthebox.com"),
-  sponsor("FLARE", "Gold", "https://flare.io"),
-  sponsor("TryHackMe", "Gold", "https://tryhackme.com"),
-  sponsor("DeepTempo", "Gold", "https://deeptempo.ai"),
-  sponsor("ACyberGurus", "Gold", "https://acybergurus.com"),
+  { name: "Graylog", tier: "Blue", url: "https://graylog.org" },
+  { name: "Hack The Box", tier: "Platinum", url: "https://hackthebox.com" },
+  { name: "FLARE", tier: "Gold", url: "https://flare.io" },
+  { name: "TryHackMe", tier: "Gold", url: "https://tryhackme.com" },
+  { name: "DeepTempo", tier: "Gold", url: "https://deeptempo.ai" },
+  { name: "ACyberGurus", tier: "Gold", url: "https://acybergurus.com" },
 ];
 
 const sixTracks = [
@@ -132,34 +149,38 @@ export const fallbackEvents: EventItem[] = [
     title: "BTV at DEF CON 34",
     slug: "def-con-34",
     year: 2026,
-    dateRange: "August 6–9, 2026 · Las Vegas, NV",
+    dateRange: "August 7–9, 2026 · Las Vegas, NV",
     tagline: "Our 9th year at DEF CON.",
     body: {
       kind: "blocks",
       blocks: [
         {
           type: "paragraph",
-          text: "Blue Team Village returns to DEF CON for our 9th year. Join defenders from around the world for talks, hands-on content, contests, and community across six content tracks.",
+          text: "We are excited to bring Blue Team Village (BTV) to DEF CON 34 for a ninth year. Join defenders from around the world for talks, hands-on content, contests, and community.",
+        },
+        {
+          type: "paragraph",
+          text: "The session tracks include the following topics: Incident Response, Forensics, Cyber Threat Hunting, Detection Engineering, Operational Technology, and Insider Threat/Risk.",
         },
         { type: "heading", text: "BTV Content" },
         {
           type: "paragraph",
-          text: "Content lineup to be announced. Watch this page and the BTV Discord for updates.",
+          text: "The full schedule is published at schedule.blueteamvillage.org. Watch this page and the BTV Discord for lineup announcements.",
         },
-        { type: "heading", text: "Contests" },
+        { type: "heading", text: "Contests at Blue Team Village" },
         {
           type: "paragraph",
-          text: "Contest details to be announced, including the BTV CTF at ctf.blueteamvillage.org.",
+          text: "The BTV Capture the Flag returns with Project Obsidian — a forensic investigation of malware in containerized environments. Details and setup steps are at ctf.blueteamvillage.org.",
         },
         { type: "heading", text: "Gatherings & Events" },
         {
           type: "paragraph",
-          text: "Gatherings and events to be announced.",
+          text: "Gatherings and events to be announced. Join the BTV Discord so you don't miss anything.",
         },
       ],
     },
     tracks: sixTracks,
-    sponsors: dc34Sponsors,
+    sponsors: fallbackCurrentSponsors,
     scheduleUrl: "https://schedule.blueteamvillage.org/",
     isCurrent: true,
   },
@@ -174,17 +195,35 @@ export const fallbackEvents: EventItem[] = [
       blocks: [
         {
           type: "paragraph",
-          text: "Blue Team Village's 8th year at DEF CON featured content across six tracks, CTF challenges, and community gatherings.",
+          text: "We were excited to bring Blue Team Village (BTV) to DEF CON 33 for an eighth year.",
         },
-        { type: "heading", text: "Movie Night and Mixer" },
         {
           type: "paragraph",
-          text: "Saturday, August 9, 7–10 PM PDT at the Las Vegas Convention Center (W216–218). Free with a DEF CON badge.",
+          text: "The session tracks included the following topics: Incident Response, Forensics, Cyber Threat Hunting, Detection Engineering, Operational Technology, and Insider Threat/Risk.",
         },
-        { type: "heading", text: "CTF" },
+        { type: "heading", text: "BTV Content" },
+        {
+          type: "paragraph",
+          text: "The full schedule was published at schedule.blueteamvillage.org.",
+        },
+        { type: "heading", text: "Contests at Blue Team Village" },
         {
           type: "paragraph",
           text: "CTF challenges were available at ctf.blueteamvillage.org/challenges.",
+        },
+        { type: "heading", text: "Gatherings & Events" },
+        {
+          type: "list",
+          items: [
+            "Movie Night and Mixer — Saturday, August 9, 7–10 PM PDT",
+            "Las Vegas Convention Center, W216–218",
+            "Free admission with a DEF CON badge",
+          ],
+        },
+        { type: "heading", text: "BTV Sponsors" },
+        {
+          type: "paragraph",
+          text: "Thank you to our sponsors! Their support enables all the things we do for the community.",
         },
       ],
     },
@@ -198,17 +237,49 @@ export const fallbackEvents: EventItem[] = [
     slug: "def-con-32",
     year: 2024,
     dateRange: "August 8–11, 2024 · Las Vegas, NV",
+    tagline: "Our 7th year at DEF CON.",
     body: {
       kind: "blocks",
       blocks: [
         {
           type: "paragraph",
-          text: "Blue Team Village's 7th year at DEF CON, featuring defender talks, hands-on workshops, the BTV CTF, and a village puzzle.",
+          text: "We were excited to bring Blue Team Village (BTV) to DEF CON 32 for a seventh year.",
+        },
+        {
+          type: "paragraph",
+          text: "The session tracks included the following topics: Incident Response, Forensics, Cyber Threat Hunting, Detection Engineering, Operational Technology, and Insider Threat/Risk.",
+        },
+        { type: "heading", text: "BTV Presentations and Workshops" },
+        {
+          type: "paragraph",
+          text: "BTV was located inside the Las Vegas Convention Center West Hall, 3rd Floor. The schedule was published at schedule.blueteamvillage.org and in the Hacker Tracker app.",
+        },
+        { type: "heading", text: "BTV Badge" },
+        {
+          type: "paragraph",
+          text: "The BTV camera badge was available at camerabadge.blueteamvillage.org.",
+        },
+        { type: "heading", text: "BTV Capture the Flag" },
+        {
+          type: "paragraph",
+          text: "The BTV CTF ran at ctf.blueteamvillage.org, alongside a village puzzle contest.",
+        },
+        { type: "heading", text: "Gatherings & Events" },
+        {
+          type: "list",
+          items: [
+            "AI Village and Blue Team Village Pool Party, featuring Dunk-A-Fed",
+            "Saturday, August 10 at 8 PM — Sahara AZILO Pool",
+            "Tacos and a cash bar",
+          ],
         },
       ],
     },
-    tracks: [],
+    tracks: sixTracks,
+    /* No per-sponsor records survive for DC32, so the body deliberately omits
+       a sponsors heading rather than leaving one orphaned. */
     sponsors: [],
+    scheduleUrl: "https://schedule.blueteamvillage.org/",
     isCurrent: false,
   },
   {
@@ -216,16 +287,44 @@ export const fallbackEvents: EventItem[] = [
     slug: "def-con-31",
     year: 2023,
     dateRange: "August 10–13, 2023 · Las Vegas, NV",
+    tagline: "Our 6th year at DEF CON.",
     body: {
       kind: "blocks",
       blocks: [
         {
           type: "paragraph",
-          text: "Blue Team Village's 6th year at DEF CON featured Project Obsidian content, the BTV CTF, and the Venator Aurum challenge.",
+          text: "We were excited to bring Blue Team Village (BTV) to DEF CON 31. Our sixth year included a 101 session track, a kill chain/workshop track, panel discussions, two contests, and more.",
+        },
+        {
+          type: "paragraph",
+          text: "The session tracks included the following topics: Incident Response, Forensics, Cyber Threat Hunting, Detection Engineering, Operational Technology, and Insider Threat/Risk.",
+        },
+        { type: "heading", text: "Location" },
+        {
+          type: "paragraph",
+          text: "BTV was located inside the Flamingo's Scenic room.",
+        },
+        { type: "heading", text: "Contests" },
+        {
+          type: "list",
+          items: [
+            "Blue Team Village CTF",
+            "Venator Aurum — a village-wide puzzle hunt",
+          ],
+        },
+        { type: "heading", text: "BTV Schedule" },
+        {
+          type: "paragraph",
+          text: "The BTV schedule was published in the Hacker Tracker app and at cfc.blueteamvillage.org/dc31/schedule.",
+        },
+        { type: "heading", text: "Thank You" },
+        {
+          type: "paragraph",
+          text: "Thank you to all of the Project Obsidian volunteers who started planning and working on content back in December and January. The Security Engineering (SecEng) crew put a ton of work into setting up infrastructure, implementing requests from the various teams, and getting everything in place for CTF participants. This would not be possible without our SecEng crew and the rest of our volunteers.",
         },
       ],
     },
-    tracks: [],
+    tracks: sixTracks,
     sponsors: [],
     isCurrent: false,
   },
@@ -234,12 +333,23 @@ export const fallbackEvents: EventItem[] = [
     slug: "def-con-30",
     year: 2022,
     dateRange: "August 11–14, 2022 · Las Vegas, NV",
+    tagline: "Blue Team Village turns 5!",
     body: {
       kind: "blocks",
       blocks: [
         {
           type: "paragraph",
-          text: "Blue Team Village's 5th year at DEF CON, back in person with defender talks, workshops, and the BTV CTF.",
+          text: "Blue Team Village returned for our fifth DEF CON, and our first back in person. We offered a packed in-person schedule alongside a full virtual schedule of talks and workshops running at the same time.",
+        },
+        { type: "heading", text: "In Person" },
+        {
+          type: "paragraph",
+          text: "BTV was located in the Savoy Room at the Flamingo — the same location we were in for DEF CON 27 in 2019. BTV showcased Project Obsidian, an immersive defensive cybersecurity learning experience, with interactive stations and live in-person walkthroughs, plus a number of panels covering a range of subjects.",
+        },
+        { type: "heading", text: "Virtual" },
+        {
+          type: "paragraph",
+          text: "Alongside the in-person content we ran a full schedule of virtual talks and interactive workshops for those who couldn't be with us in person. Talks were streamed on the Blue Team Village Twitch channel, with speakers available in the Blue Team Village channel on the DEF CON Discord during their sessions. Recordings were released on the Blue Team Village YouTube channel after DEF CON.",
         },
       ],
     },
@@ -566,7 +676,7 @@ export const fallbackMilestones: Milestone[] = [
   {
     year: "2026 · DEF CON 34",
     title: "Our 9th year",
-    body: "BTV returns to Las Vegas August 6–9 with talks, workshops, contests, and the Project Obsidian CTF.",
+    body: "BTV returns to Las Vegas August 7–9 with talks, workshops, contests, and the Project Obsidian CTF.",
   },
   {
     year: "2027 · DEF CON 35",

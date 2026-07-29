@@ -15,6 +15,7 @@ import type {
 } from "@/types/content";
 import { cacheKey, cachedFetch } from "./cache";
 import {
+  fallbackCurrentSponsors,
   fallbackEvents,
   fallbackPages,
   fallbackPosts,
@@ -122,6 +123,36 @@ function toSponsor(entry: Entry<never>): Sponsor | null {
   };
 }
 
+/*
+ * The CTF site's "sponsor" type is the maintained record of the current
+ * roster — it carries logos, blurbs, tier, order, and an active flag, which
+ * "websiteSponsor" does not. Reading it here keeps sponsor presentation
+ * identical on both properties and means one edit updates both.
+ * websiteSponsor stays in use for per-event historical lists.
+ */
+const SHARED_TIER: Record<string, SponsorTier> = {
+  blue: "Blue",
+  platinum: "Platinum",
+  gold: "Gold",
+  community: "Community",
+};
+
+function toSharedSponsor(entry: Entry<never>): Sponsor | null {
+  const f = fieldsOf(entry);
+  const name = str(f, "name");
+  if (!name) return null;
+  const logo = f.logo as { fields?: { file?: { url?: string } } } | undefined;
+  return {
+    name,
+    tier: SHARED_TIER[str(f, "tier") ?? ""] ?? "Community",
+    url: str(f, "url") ?? "#",
+    logoUrl: logo?.fields?.file?.url
+      ? `https:${logo.fields.file.url}`
+      : undefined,
+    blurb: str(f, "blurb"),
+  };
+}
+
 function toPage(entry: Entry<never>): Page {
   const f = fieldsOf(entry);
   return {
@@ -224,6 +255,26 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       };
     },
     fallbackSettings,
+  );
+}
+
+/** The current sponsor roster, newest source of truth for both properties. */
+export async function getCurrentSponsors(): Promise<Sponsor[]> {
+  return fetchEntries(
+    cacheKey.list("sponsor"),
+    {
+      content_type: "sponsor",
+      "fields.active": true,
+      order: ["fields.order"],
+      limit: 50,
+    },
+    (items) => {
+      const mapped = items
+        .map(toSharedSponsor)
+        .filter((s): s is Sponsor => s !== null);
+      return mapped.length ? mapped : fallbackCurrentSponsors;
+    },
+    fallbackCurrentSponsors,
   );
 }
 
