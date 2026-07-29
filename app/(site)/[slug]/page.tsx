@@ -8,9 +8,15 @@ export const revalidate = 3600;
 
 type Props = { params: Promise<{ slug: string }> };
 
+/* "about" has its own route (it appends the history timeline), so exclude it
+ * here — generating it in both places is a duplicate-route build error. */
+const OWN_ROUTE = new Set(["about"]);
+
 export async function generateStaticParams() {
   const pages = await getPages();
-  return pages.map((p) => ({ slug: p.slug }));
+  return pages
+    .filter((p) => !OWN_ROUTE.has(p.slug))
+    .map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
