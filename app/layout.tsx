@@ -27,6 +27,11 @@ export const metadata: Metadata = {
     siteName: "Blue Team Village",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@blueteamvillage",
+    creator: "@blueteamvillage",
+  },
 };
 
 export default function RootLayout({

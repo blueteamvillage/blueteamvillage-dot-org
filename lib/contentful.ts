@@ -10,6 +10,7 @@ import type {
   Page,
   Program,
   SiteSettings,
+  SocialLink,
   Sponsor,
   SponsorTier,
 } from "@/types/content";
@@ -153,6 +154,31 @@ function toSharedSponsor(entry: Entry<never>): Sponsor | null {
   };
 }
 
+/*
+ * websiteSettings has no socialLinks field yet. When one is added it will
+ * arrive as untyped JSON, so validate the shape rather than trusting it —
+ * a link with no href would render as a dead anchor.
+ */
+function toSocialLinks(value: unknown): SocialLink[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const links = value.flatMap((raw) => {
+    if (!raw || typeof raw !== "object") return [];
+    const f = raw as Fields;
+    const label = str(f, "label");
+    const href = str(f, "href");
+    if (!label || !href) return [];
+    return [
+      {
+        label,
+        href,
+        handle: str(f, "handle") ?? label,
+        verifiable: f.verifiable === true,
+      },
+    ];
+  });
+  return links.length ? links : undefined;
+}
+
 function toPage(entry: Entry<never>): Page {
   const f = fieldsOf(entry);
   return {
@@ -232,6 +258,8 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         navigation: Array.isArray(f.navigation)
           ? (f.navigation as unknown as NavItem[])
           : fallbackSettings.navigation,
+        socialLinks:
+          toSocialLinks(f.socialLinks) ?? fallbackSettings.socialLinks,
         discordUrl: str(f, "discordUrl") ?? fallbackSettings.discordUrl,
         shopUrl: str(f, "shopUrl") ?? fallbackSettings.shopUrl,
         ctfUrl: str(f, "ctfUrl") ?? fallbackSettings.ctfUrl,

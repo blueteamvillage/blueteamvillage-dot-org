@@ -5,6 +5,7 @@ import type {
   Page,
   Program,
   SiteSettings,
+  SocialLink,
   Sponsor,
   Stat,
 } from "@/types/content";
@@ -15,6 +16,30 @@ import type {
  * without secrets, CI builds) and used as the seed source for the CMS.
  * Once Contentful is live, edits happen there — not here.
  */
+
+/*
+ * BTV's accounts. Mastodon carries rel="me" so defcon.social can verify this
+ * site as the account's own — that verification only works from a link the
+ * account holder controls, which is this footer.
+ */
+export const fallbackSocialLinks: SocialLink[] = [
+  {
+    label: "X / Twitter",
+    href: "https://x.com/blueteamvillage",
+    handle: "@blueteamvillage",
+  },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/the-blue-team-village",
+    handle: "the-blue-team-village",
+  },
+  {
+    label: "Mastodon",
+    href: "https://defcon.social/@blueteamvillage",
+    handle: "@blueteamvillage@defcon.social",
+    verifiable: true,
+  },
+];
 
 export const fallbackSettings: SiteSettings = {
   siteName: "Blue Team Village",
@@ -55,6 +80,7 @@ export const fallbackSettings: SiteSettings = {
     },
     { label: "CTF", href: "https://ctf.blueteamvillage.org/", external: true },
   ],
+  socialLinks: fallbackSocialLinks,
   discordUrl: "https://discord.gg/blueteamvillage",
   shopUrl: "https://blueteamvillage.myspreadshop.com/",
   ctfUrl: "https://ctf.blueteamvillage.org/",
@@ -364,7 +390,7 @@ export const fallbackPrograms: Program[] = [
     name: "Project Obsidian",
     slug: "project-obsidian",
     summary:
-      "A free, immersive, defensive cybersecurity learning experience — workshops, videos, reading materials, and labs, year-round.",
+      "A free, immersive, defensive cybersecurity learning experience — workshops, labs, and BTV's Capture the Flag, year-round.",
     body: {
       kind: "blocks",
       blocks: [
@@ -387,15 +413,19 @@ export const fallbackPrograms: Program[] = [
           type: "paragraph",
           text: "Additional focus areas in development include Detection Engineering and Operational Technology.",
         },
+        { type: "heading", text: "Capture the Flag" },
+        {
+          type: "paragraph",
+          text: "BTV's Capture the Flag is Project Obsidian played as a competition — the same disciplines and the same defender's-seat telemetry, scored. It runs at DEF CON and lives at ctf.blueteamvillage.org, where you'll find this year's event, the setup instructions, and the archive of past challenges.",
+        },
         { type: "heading", text: "Get involved" },
         {
           type: "paragraph",
-          text: "Project Obsidian is built by volunteers. Join the BTV Discord to participate, or sign up through the volunteer intake form.",
+          text: "Project Obsidian is built by volunteers. Join the BTV Discord to take part — at DEF CON and year-round.",
         },
       ],
     },
     disciplines: ["IR", "DF", "REM", "CTI", "CTH"],
-    intakeFormUrl: "https://forms.gle/U1WZF4Tq6EGqhDVx7",
     order: 1,
   },
   {
@@ -688,7 +718,6 @@ export const fallbackMilestones: Milestone[] = [
 /* Home-page stat row. */
 export const fallbackStats: Stat[] = [
   { value: "9", label: "Years at DEF CON" },
-  { value: "6", label: "Content tracks" },
   { value: "10k", suffix: "+", label: "Discord members" },
   { value: "501(c)(3)", label: "Nonprofit charity" },
 ];

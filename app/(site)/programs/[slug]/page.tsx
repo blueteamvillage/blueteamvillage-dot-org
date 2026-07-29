@@ -8,6 +8,9 @@ import { getProgram, getPrograms, getSiteSettings } from "@/lib/contentful";
 
 export const revalidate = 3600;
 
+/** Project Obsidian and the CTF are one program, so its page leads to the CTF. */
+const OBSIDIAN_SLUG = "project-obsidian";
+
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
@@ -51,6 +54,17 @@ export default async function ProgramPage({ params }: Props) {
         <Prose body={program.body} />
 
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+          {program.slug === OBSIDIAN_SLUG && (
+            <Button asChild size="lg">
+              <a
+                href={settings.ctfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Play the CTF ↗
+              </a>
+            </Button>
+          )}
           {program.intakeFormUrl && (
             <Button asChild size="lg">
               <a

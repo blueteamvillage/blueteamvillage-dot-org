@@ -81,6 +81,30 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                 </a>
               </li>
             </ul>
+            <div className="pt-2">
+              <h2 className={headingClass}>Follow</h2>
+              <ul className="flex flex-wrap gap-x-4 gap-y-2">
+                {settings.socialLinks.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      /* rel="me" is how the platform verifies this site
+                       * belongs to the account — see SocialLink.verifiable. */
+                      rel={
+                        link.verifiable
+                          ? "me noopener noreferrer"
+                          : "noopener noreferrer"
+                      }
+                      title={link.handle}
+                      className={linkClass}
+                    >
+                      {link.label} ↗
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <nav aria-label="Programs">

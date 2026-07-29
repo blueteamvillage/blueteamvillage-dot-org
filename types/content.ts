@@ -93,10 +93,21 @@ export interface NavItem {
   children?: NavItem[];
 }
 
+export interface SocialLink {
+  /** Platform name, e.g. "Mastodon". */
+  label: string;
+  href: string;
+  /** How the account reads on that platform, e.g. "@blueteamvillage". */
+  handle: string;
+  /** Emit `rel="me"`, which lets the platform verify this site links back. */
+  verifiable?: boolean;
+}
+
 export interface SiteSettings {
   siteName: string;
   tagline: string;
   navigation: NavItem[];
+  socialLinks: SocialLink[];
   discordUrl: string;
   shopUrl: string;
   ctfUrl: string;
