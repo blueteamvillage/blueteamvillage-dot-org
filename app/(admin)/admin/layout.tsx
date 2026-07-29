@@ -25,8 +25,8 @@ export default async function AdminLayout({
     <div className="mx-auto max-w-6xl px-4 py-10">
       <header className="flex flex-wrap items-center justify-between gap-4 border-b border-teal/60 pb-6">
         <div>
-          <p className="log-line">[btv-admin] session: {role}</p>
-          <h1 className="mt-1 text-2xl font-black text-foam">
+          <p className="font-mono text-xs text-mint">[btv-admin] session: {role}</p>
+          <h1 className="mt-1 text-2xl font-black text-white">
             Website admin
           </h1>
         </div>
@@ -34,7 +34,7 @@ export default async function AdminLayout({
           <span className="text-mist">{session.user.email}</span>
           <span
             className={`rounded-full px-3 py-1 text-xs font-black ${
-              role === "admin" ? "bg-gold text-abyss" : "bg-teal text-foam"
+              role === "admin" ? "bg-gold text-navy-deep" : "bg-teal text-fog"
             }`}
           >
             {role}
@@ -47,7 +47,7 @@ export default async function AdminLayout({
           >
             <button
               type="submit"
-              className="rounded border border-teal px-3 py-1.5 text-foam hover:border-mint hover:text-mint"
+              className="rounded border border-teal px-3 py-1.5 text-fog hover:border-mint hover:text-mint"
             >
               Sign out
             </button>
@@ -61,7 +61,7 @@ export default async function AdminLayout({
             <Link
               key={item.href}
               href={item.href}
-              className="rounded border border-teal px-3 py-1.5 text-sm font-bold text-foam hover:border-mint hover:text-mint"
+              className="rounded border border-teal px-3 py-1.5 text-sm font-bold text-fog hover:border-mint hover:text-mint"
             >
               {item.label}
             </Link>

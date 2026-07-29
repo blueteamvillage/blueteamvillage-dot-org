@@ -1,6 +1,24 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getCurrentEvent, getPrograms, getSiteSettings } from "@/lib/contentful";
+import {
+  ArrowRight,
+  Award,
+  Flag,
+  GraduationCap,
+  Handshake,
+  Search,
+  ShieldCheck,
+} from "lucide-react";
+import { Eyebrow } from "@/components/site/eyebrow";
+import { GradientDivider } from "@/components/site/gradient-divider";
+import { IconChip } from "@/components/site/icon-chip";
+import { PillBadge } from "@/components/site/pill-badge";
+import { SponsorGrid } from "@/components/sponsor-grid";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getCurrentEvent, getEvents, getPrograms, getSiteSettings } from "@/lib/contentful";
+import { fallbackMilestones, fallbackStats } from "@/lib/fallback-content";
 
 export const revalidate = 3600;
 
@@ -16,139 +34,518 @@ const VALUES = [
   "Encouragement",
 ];
 
+/* Programs are CMS-driven; the icon per slug is presentation, so it lives here. */
+const PROGRAM_ICONS = {
+  "project-obsidian": { icon: GraduationCap, tone: "teal" },
+  "meet-a-mentor": { icon: Handshake, tone: "mint" },
+} as const;
+
+const BLUE_TIER_PERKS = [
+  "Exclusive presenting-sponsor placement on all BTV materials",
+  "Featured speaking or workshop slot at DEF CON",
+  "Premier logo on the BTV website, CTF platform, and event signage",
+  "Dedicated social spotlight to the BTV community",
+  "Direct access to the most engaged defensive security community in the world",
+];
+
 export default async function HomePage() {
-  const [settings, current, programs] = await Promise.all([
+  const [settings, current, events, programs] = await Promise.all([
     getSiteSettings(),
     getCurrentEvent(),
+    getEvents(),
     getPrograms(),
   ]);
 
+  const past = events.filter((e) => e.slug !== current?.slug);
+  const sponsors = current?.sponsors ?? [];
+  const hasBlueSponsor = sponsors.some((s) => s.tier === "Blue");
+
   return (
     <>
-      {/* Hero: the SOC status board — the BTV mark is the radar contact */}
-      <section className="relative overflow-hidden border-b border-teal/40">
-        <div className="radar" aria-hidden="true" />
-        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 py-20 sm:py-24 lg:grid-cols-[1fr_auto]">
-          <div>
-            <p className="log-line">
-              [btv-{current ? `dc${current.year - 1992}` : "2026"}] status:
-              defending
-            </p>
-            <h1 className="mt-4 max-w-3xl text-5xl font-black leading-none text-foam sm:text-7xl">
-              The other side of the hacking mirror.
-            </h1>
-            <p className="mt-6 max-w-2xl text-lg text-mist">
-              Blue Team Village is a place and a community built for and by
-              defenders — a global, safe, and inclusive space for sharing,
-              learning, and support for all cyber defenders, regardless of
-              skill level.
-            </p>
-            <div className="mt-10 flex flex-wrap gap-3">
-              {current && (
-                <Link
-                  href={`/events/${current.slug}`}
-                  className="rounded bg-gold px-5 py-3 font-black text-abyss hover:brightness-110"
-                >
-                  {current.title} → {current.dateRange.split("·")[0].trim()}
+      {/* Hero */}
+      <section className="mx-auto grid max-w-6xl items-center gap-10 px-6 pt-20 pb-16 lg:grid-cols-[1fr_auto]">
+        <div>
+          {/* current.title is "BTV at DEF CON 34" — drop the prefix so the
+              eyebrow doesn't say the village's name twice. */}
+          <Eyebrow>
+            Blue Team Village ·{" "}
+            {current?.title.replace(/^BTV at /i, "") ?? "DEF CON"}
+          </Eyebrow>
+          <h1 className="mt-4 max-w-3xl text-5xl font-black tracking-tight text-white md:text-7xl">
+            The other side of the{" "}
+            <span className="animate-pulse-glow text-teal-bright">
+              hacking mirror
+            </span>
+            .
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
+            Blue Team Village is a place and a community built for and by
+            defenders — a global, safe, and inclusive space for sharing,
+            learning, and support for all cyber defenders, regardless of skill
+            level.
+          </p>
+
+          <div className="mt-8 flex items-center gap-5" aria-hidden>
+            <IconChip icon={ShieldCheck} tone="teal" />
+            <IconChip icon={Search} tone="mint" />
+            <IconChip icon={Flag} tone="gold" />
+          </div>
+
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            {current && <PillBadge>{current.dateRange}</PillBadge>}
+            <PillBadge>9th year at DEF CON</PillBadge>
+            <PillBadge>
+              <span className="text-teal-bright">501(c)(3)</span> nonprofit
+            </PillBadge>
+          </div>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            {current && (
+              <Button asChild size="lg">
+                <Link href={`/events/${current.slug}`}>
+                  {current.title}
+                  <ArrowRight aria-hidden />
                 </Link>
-              )}
+              </Button>
+            )}
+            <Button asChild size="lg" variant="outline">
               <a
                 href={settings.discordUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded border border-mint px-5 py-3 font-bold text-mint hover:bg-mint hover:text-abyss"
               >
                 Join the Discord
               </a>
+            </Button>
+          </div>
+        </div>
+
+        <Image
+          src="/btv-logo.png"
+          alt="Blue Team Village logo — a letter B formed by a dagger, power plug, and wrench"
+          width={545}
+          height={620}
+          priority
+          className="mx-auto h-auto w-52 drop-shadow-[0_0_45px_rgba(1,127,164,0.55)] sm:w-64 lg:w-96"
+        />
+      </section>
+
+      {/* Stat row */}
+      <section className="mx-auto max-w-6xl px-6">
+        <div className="grid grid-cols-2 gap-4 rounded-lg border border-white/[0.06] bg-navy-card p-6 sm:p-8 lg:grid-cols-4">
+          {fallbackStats.map((stat) => (
+            <div key={stat.label}>
+              <p className="text-3xl font-black text-white sm:text-4xl">
+                {stat.value}
+                {stat.suffix && (
+                  <span className="text-teal-bright">{stat.suffix}</span>
+                )}
+              </p>
+              {/* mist, not haze: haze on navy-card is only 3.7:1, which
+                  doesn't clear AA for text this small. */}
+              <p className="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-mist">
+                {stat.label}
+              </p>
             </div>
-          </div>
-          <Image
-            src="/btv-logo.png"
-            alt="Blue Team Village logo — a letter B formed by a dagger, power plug, and wrench"
-            width={545}
-            height={620}
-            priority
-            className="mx-auto h-auto w-52 drop-shadow-[0_0_45px_rgba(1,127,164,0.55)] sm:w-64 lg:w-96"
-          />
-        </div>
-      </section>
-
-      {/* Mission / vision */}
-      <section className="mx-auto max-w-6xl px-4 py-20">
-        <div className="grid gap-10 md:grid-cols-2">
-          <div>
-            <p className="log-line">[btv] mission</p>
-            <p className="mt-3 text-xl leading-relaxed text-foam">
-              To curate content and create global, safe, and inclusive spaces
-              designed to foster sharing, learning, community, support and
-              encouragement for all cyber defenders regardless of skill level.
-            </p>
-          </div>
-          <div>
-            <p className="log-line">[btv] vision</p>
-            <p className="mt-3 text-xl leading-relaxed text-foam">
-              To be the premier organization supporting the cyber defender
-              community.
-            </p>
-            <ul className="mt-6 flex flex-wrap gap-2">
-              {VALUES.map((v) => (
-                <li
-                  key={v}
-                  className="rounded-full border border-teal px-3 py-1 text-sm text-mist"
-                >
-                  {v}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Programs */}
-      <section className="mx-auto max-w-6xl px-4 py-8">
-        <p className="log-line">[btv] programs: year-round</p>
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
-          {programs.map((p) => (
-            <Link
-              key={p.slug}
-              href={`/programs/${p.slug}`}
-              className="rounded-lg border border-teal/60 bg-navy p-6 hover:border-mint"
-            >
-              <h2 className="text-2xl font-black text-foam">{p.name}</h2>
-              <p className="mt-3 text-mist">{p.summary}</p>
-              <p className="mt-4 font-bold text-mint">Learn more →</p>
-            </Link>
           ))}
         </div>
       </section>
 
-      {/* Support strip */}
-      <section className="mx-auto max-w-6xl px-4 py-20">
-        <div className="rounded-lg border border-teal/60 bg-navy p-8 sm:p-10">
-          <p className="log-line">[btv] support</p>
-          <h2 className="mt-3 text-3xl font-black text-foam">
-            Keep defender education free.
-          </h2>
-          <p className="mt-3 max-w-2xl text-mist">
-            The Association of Blue Team Villages is a 501(c)(3) public
-            charity. Donations are tax-deductible and fund free training,
-            mentorship, and our village at DEF CON.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link
-              href="/donate"
-              className="rounded bg-gold px-5 py-3 font-black text-abyss hover:brightness-110"
+      {/* Mission / vision / values */}
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <Eyebrow>Our foundation</Eyebrow>
+        <h2 className="mt-3 text-3xl font-black text-white sm:text-4xl">
+          Built by defenders, for defenders.
+        </h2>
+        <p className="mt-4 max-w-3xl leading-relaxed text-mist">
+          In early 2018, a small group of defenders started a conversation about
+          what a defense-focused village at DEF CON could look like. In weeks
+          there was an organization. In months, BTV was at DEF CON 26.
+        </p>
+
+        <div className="mt-10 grid gap-6 lg:grid-cols-3">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Mission</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="leading-relaxed text-mist">
+                To curate content and create global, safe, and inclusive spaces
+                designed to foster sharing, learning, community, support and
+                encouragement for all cyber defenders regardless of skill level.
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Vision</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="leading-relaxed text-mist">
+                To be the premier organization supporting the cyber defender
+                community — one that encourages, teaches, learns, and shares
+                experiences and knowledge.
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Values</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="flex flex-wrap gap-2">
+                {VALUES.map((value) => (
+                  <li key={value}>
+                    <Badge variant="outline">{value}</Badge>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Timeline */}
+      <section className="mx-auto max-w-6xl px-6 py-8">
+        <Eyebrow>A decade of defense</Eyebrow>
+        <h2 className="mt-3 text-3xl font-black text-white sm:text-4xl">
+          Ten years of Blue Team Village
+        </h2>
+
+        <ol className="relative mt-12 space-y-4">
+          {/* Rail: left edge on mobile, centered from lg up */}
+          <div
+            aria-hidden
+            className="absolute inset-y-0 left-[7px] w-px bg-linear-to-b from-transparent via-teal/40 to-transparent lg:left-1/2 lg:-translate-x-1/2"
+          />
+          {fallbackMilestones.map((milestone, i) => (
+            <li
+              key={milestone.year}
+              className="relative pl-8 lg:grid lg:grid-cols-2 lg:gap-10 lg:pl-0"
             >
-              Donate
+              <span
+                aria-hidden
+                className="absolute left-0 top-5 h-3.5 w-3.5 rounded-full border-2 border-navy bg-teal-bright lg:left-1/2 lg:-translate-x-1/2"
+              />
+              <div
+                className={
+                  i % 2 === 0
+                    ? "lg:col-start-1 lg:text-right"
+                    : "lg:col-start-2"
+                }
+              >
+                <div className="rounded-lg border border-white/[0.06] bg-navy-card p-5">
+                  <p className="font-mono text-sm text-teal-bright">
+                    {milestone.year}
+                  </p>
+                  <h3 className="mt-1 text-xl font-black text-white">
+                    {milestone.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-mist">
+                    {milestone.body}
+                  </p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {/* Programs */}
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <Eyebrow>What we do</Eyebrow>
+            <h2 className="mt-3 text-3xl font-black text-white sm:text-4xl">
+              Programs &amp; initiatives
+            </h2>
+          </div>
+          <Button asChild variant="outline">
+            <Link href="/programs">
+              All programs
+              <ArrowRight aria-hidden />
             </Link>
+          </Button>
+        </div>
+
+        <div className="mt-8 grid gap-6 lg:grid-cols-3">
+          {programs.map((program) => {
+            const art = PROGRAM_ICONS[
+              program.slug as keyof typeof PROGRAM_ICONS
+            ] ?? { icon: ShieldCheck, tone: "teal" as const };
+            return (
+              <Card key={program.slug} className="gap-4">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <IconChip icon={art.icon} tone={art.tone} />
+                    <CardTitle className="text-lg leading-tight">
+                      {program.name}
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="flex flex-1 flex-col gap-4">
+                  <p className="flex-1 text-sm leading-relaxed text-mist">
+                    {program.summary}
+                  </p>
+                  <Link
+                    href={`/programs/${program.slug}`}
+                    className="inline-flex items-center gap-1.5 text-sm font-bold text-teal-bright transition-colors hover:text-mint"
+                  >
+                    Learn more
+                    <ArrowRight className="h-4 w-4" aria-hidden />
+                  </Link>
+                </CardContent>
+              </Card>
+            );
+          })}
+
+          {/* The CTF lives on its own site, but reads as a program here. */}
+          <Card className="gap-4">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <IconChip icon={Flag} tone="gold" />
+                <CardTitle className="text-lg leading-tight">
+                  Capture the Flag
+                </CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="flex flex-1 flex-col gap-4">
+              <p className="flex-1 text-sm leading-relaxed text-mist">
+                Put your defensive skills to the test in BTV&apos;s annual CTF —
+                real-world forensic scenarios built to sharpen the skills that
+                matter most to defenders.
+              </p>
+              <a
+                href={settings.ctfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm font-bold text-teal-bright transition-colors hover:text-mint"
+              >
+                Visit the CTF site ↗
+              </a>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Events */}
+      <section className="mx-auto max-w-6xl px-6 py-8">
+        <Eyebrow>Where to find us</Eyebrow>
+        <h2 className="mt-3 text-3xl font-black text-white sm:text-4xl">
+          Events
+        </h2>
+
+        {current && (
+          <Card className="mt-8 border-teal/30">
+            <CardHeader>
+              <Badge variant="secondary" className="w-fit">
+                Up next · Featured event
+              </Badge>
+              <CardTitle className="mt-2 text-2xl">{current.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="rounded-lg border border-white/[0.06] bg-navy-deep p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-mint">
+                    Dates
+                  </p>
+                  <p className="mt-2 font-bold text-white">
+                    {current.dateRange.split("·")[0].trim()}
+                  </p>
+                </div>
+                <div className="rounded-lg border border-white/[0.06] bg-navy-deep p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-mint">
+                    Location
+                  </p>
+                  <p className="mt-2 font-bold text-white">
+                    {current.dateRange.split("·")[1]?.trim() ?? "Las Vegas, NV"}
+                  </p>
+                </div>
+                <div className="rounded-lg border border-white/[0.06] bg-navy-deep p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-mint">
+                    Tracks
+                  </p>
+                  <p className="mt-2 font-bold text-white">
+                    {current.tracks.length || 6} content tracks
+                  </p>
+                </div>
+              </div>
+
+              {current.tagline && (
+                <p className="leading-relaxed text-mist">{current.tagline}</p>
+              )}
+
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button asChild>
+                  <Link href={`/events/${current.slug}`}>
+                    Event details
+                    <ArrowRight aria-hidden />
+                  </Link>
+                </Button>
+                {current.scheduleUrl && (
+                  <Button asChild variant="outline">
+                    <a
+                      href={current.scheduleUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View the schedule ↗
+                    </a>
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {past.length > 0 && (
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {past.map((event) => (
+              <Link
+                key={event.slug}
+                href={`/events/${event.slug}`}
+                className="rounded-lg border border-white/[0.06] bg-navy-card p-5 transition-colors hover:border-white/20"
+              >
+                <p className="font-mono text-sm text-teal-bright">
+                  {event.year}
+                </p>
+                <p className="mt-1 font-bold text-white">{event.title}</p>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Community */}
+      <section className="mx-auto max-w-4xl px-6 py-20 text-center">
+        <Eyebrow>Stay connected</Eyebrow>
+        <h2 className="mt-3 text-3xl font-black text-white sm:text-4xl">
+          Join the community
+        </h2>
+        <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-mist">
+          The conversation never stops. Hang out in our Discord to ask
+          questions, catch up with old friends, meet new ones, and stay sharp
+          between events.
+        </p>
+        <p className="mt-6 font-mono text-teal-bright">
+          discord.gg/blueteamvillage
+        </p>
+        <div className="mt-6 flex justify-center">
+          <Button asChild size="lg">
             <a
-              href={settings.shopUrl}
+              href={settings.discordUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded border border-teal px-5 py-3 font-bold text-foam hover:border-mint hover:text-mint"
             >
-              Shop merch ↗
+              Join the Discord
+              <ArrowRight aria-hidden />
             </a>
+          </Button>
+        </div>
+      </section>
+
+      {/* Sponsors */}
+      <section className="mx-auto max-w-6xl px-6 py-8">
+        <Eyebrow>Partners in defense</Eyebrow>
+        <h2 className="mt-3 text-3xl font-black text-white sm:text-4xl">
+          Thank you, {current?.year ?? ""} sponsors
+        </h2>
+        <p className="mt-4 max-w-3xl leading-relaxed text-mist">
+          Their support funds free defender education, our community programs,
+          and BTV&apos;s village at DEF CON.
+        </p>
+
+        <div className="mt-8">
+          <SponsorGrid sponsors={sponsors} />
+        </div>
+
+        {/* The Blue tier is a single presenting slot — pitch it only while
+            it's actually unclaimed. */}
+        {!hasBlueSponsor && (
+          <Card className="mt-10 border-gold/30">
+            <CardHeader>
+              <Badge variant="warning" className="w-fit">
+                <Award aria-hidden />
+                Premier opportunity
+              </Badge>
+              <CardTitle className="mt-2 text-2xl">
+                Become the Blue sponsor
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              <p className="max-w-3xl leading-relaxed text-mist">
+                The Blue tier is BTV&apos;s highest sponsorship level — named
+                after the community itself. As the sole Blue sponsor, your brand
+                stands alone at the top, reaching{" "}
+                <strong className="text-white">
+                  active cyber defenders at DEF CON and year-round
+                </strong>{" "}
+                through our Discord, CTF, and Project Obsidian training program.
+              </p>
+              <ul className="space-y-2">
+                {BLUE_TIER_PERKS.map((perk) => (
+                  <li
+                    key={perk}
+                    className="flex gap-2.5 text-sm leading-relaxed text-mist"
+                  >
+                    <span aria-hidden className="mt-0.5 text-teal-bright">
+                      ▸
+                    </span>
+                    {perk}
+                  </li>
+                ))}
+              </ul>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button asChild>
+                  <a href="mailto:sponsorship@blueteamvillage.org">
+                    Contact us about sponsorship
+                    <ArrowRight aria-hidden />
+                  </a>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link href="/prospectus">Sponsorship prospectus</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </section>
+
+      {/* Support */}
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <div className="rounded-lg border border-white/[0.06] bg-navy-card p-8 sm:p-10">
+          <Eyebrow>Keep the blue light on</Eyebrow>
+          <h2 className="mt-3 text-3xl font-black text-white">
+            Support Blue Team Village
+          </h2>
+          <p className="mt-4 max-w-2xl leading-relaxed text-mist">
+            BTV runs on community support. Your tax-deductible donation funds
+            free training, mentorship, and our village at DEF CON.
+          </p>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <Button asChild size="lg">
+              <Link href="/donate">
+                Make a donation
+                <ArrowRight aria-hidden />
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <a
+                href={settings.shopUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Visit the shop ↗
+              </a>
+            </Button>
+          </div>
+
+          <GradientDivider className="my-8" />
+
+          <div className="space-y-1 text-sm text-haze">
+            {settings.legalBlock.map((line) => (
+              <p key={line}>{line}</p>
+            ))}
           </div>
         </div>
       </section>

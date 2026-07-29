@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
-import { Lato, Atkinson_Hyperlegible } from "next/font/google";
+import { Lato, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+/* Same two faces as ctf.blueteamvillage.org — Lato for everything, Geist
+ * Mono for terminal cues (years, copyright, invite URLs). */
 const lato = Lato({
   weight: ["400", "700", "900"],
   subsets: ["latin"],
   variable: "--font-lato",
 });
 
-const atkinson = Atkinson_Hyperlegible({
-  weight: ["400", "700"],
+const geistMono = Geist_Mono({
   subsets: ["latin"],
-  variable: "--font-atkinson",
+  variable: "--font-geist-mono",
 });
 
 export const metadata: Metadata = {
@@ -34,9 +35,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${lato.variable} ${atkinson.variable} h-full antialiased`}
+      className={`${lato.variable} ${geistMono.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col font-sans antialiased">
+        {children}
+      </body>
     </html>
   );
 }

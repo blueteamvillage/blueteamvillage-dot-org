@@ -116,6 +116,9 @@ function toSponsor(entry: Entry<never>): Sponsor | null {
     logoUrl: logo?.fields?.file?.url
       ? `https:${logo.fields.file.url}`
       : undefined,
+    // `blurb` isn't on the websiteSponsor content type yet; reading it now
+    // means the grid picks it up the moment the field is added.
+    blurb: str(f, "blurb"),
   };
 }
 
@@ -208,6 +211,16 @@ export async function getSiteSettings(): Promise<SiteSettings> {
           typeof f.legalBlock === "string"
             ? (f.legalBlock as string).split("\n").filter(Boolean)
             : fallbackSettings.legalBlock,
+        // Announcement fields aren't on websiteSettings yet — same forward
+        // compatibility as Sponsor.blurb.
+        announcementEnabled:
+          typeof f.announcementEnabled === "boolean"
+            ? f.announcementEnabled
+            : fallbackSettings.announcementEnabled,
+        announcementText:
+          str(f, "announcementText") ?? fallbackSettings.announcementText,
+        announcementUrl:
+          str(f, "announcementUrl") ?? fallbackSettings.announcementUrl,
       };
     },
     fallbackSettings,

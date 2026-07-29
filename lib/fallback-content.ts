@@ -1,10 +1,12 @@
 import type {
   BlogPost,
   EventItem,
+  Milestone,
   Page,
   Program,
   SiteSettings,
   Sponsor,
+  Stat,
 } from "@/types/content";
 
 /*
@@ -65,24 +67,55 @@ export const fallbackSettings: SiteSettings = {
   ],
 };
 
+/*
+ * Blurbs match the copy running on ctf.blueteamvillage.org for the sponsors
+ * both sites carry, so a sponsor reads the same either place they land.
+ */
+const blurbs: Record<string, string> = {
+  Graylog:
+    "Log management and SIEM built for defenders — centralize, search, and alert on the telemetry that matters.",
+  "Hack The Box":
+    "Equip threat-ready cyber teams for an AI-accelerated landscape with hands-on labs, assessments, and pathways that build top performing teams.",
+  "Detection Engineering Weekly":
+    "The latest news and how-tos in detection engineering, delivered weekly to practitioners in the field.",
+  Expel:
+    "Agentic MDR means AI speed, without tradeoffs. Tech makes you fast. Humans make you accurate. You keep your tools, your visibility, and your control.",
+  DeepTempo:
+    "Helps security teams identify modern attacks earlier using AI-powered behavioral detection — catching attacker intent that rules and signatures miss.",
+  TryHackMe:
+    "Hands-on cyber security training through real-world scenarios — making learning to defend accessible for everyone, everywhere.",
+  FRSecure:
+    "Information security experts on a mission to fix a broken industry — consulting, training, and CISSP education for defenders.",
+  FLARE: "Continuous threat exposure management across the clear and dark web.",
+  ACyberGurus:
+    "Cybersecurity training and advisory services for teams building defensive capability.",
+};
+
+function sponsor(name: string, tier: Sponsor["tier"], url: string): Sponsor {
+  return { name, tier, url, blurb: blurbs[name] };
+}
+
 const dc34Sponsors: Sponsor[] = [
-  { name: "Graylog", tier: "Blue", url: "https://graylog.org" },
-  { name: "Hack The Box", tier: "Platinum", url: "https://hackthebox.com" },
-  {
-    name: "Detection Engineering Weekly",
-    tier: "Gold",
-    url: "https://detectionengineering.net",
-  },
-  { name: "Expel", tier: "Gold", url: "https://expel.com" },
+  sponsor("Graylog", "Blue", "https://graylog.org"),
+  sponsor("Hack The Box", "Platinum", "https://hackthebox.com"),
+  sponsor(
+    "Detection Engineering Weekly",
+    "Gold",
+    "https://detectionengineering.net",
+  ),
+  sponsor("Expel", "Gold", "https://expel.com"),
+  sponsor("DeepTempo", "Gold", "https://deeptempo.ai"),
+  sponsor("FRSecure", "Gold", "https://frsecure.com"),
+  sponsor("TryHackMe", "Gold", "https://tryhackme.com"),
 ];
 
 const dc33Sponsors: Sponsor[] = [
-  { name: "Graylog", tier: "Blue", url: "https://graylog.org" },
-  { name: "Hack The Box", tier: "Platinum", url: "https://hackthebox.com" },
-  { name: "FLARE", tier: "Gold", url: "https://flare.io" },
-  { name: "TryHackMe", tier: "Gold", url: "https://tryhackme.com" },
-  { name: "DeepTempo", tier: "Gold", url: "https://deeptempo.ai" },
-  { name: "ACyberGurus", tier: "Gold", url: "https://acybergurus.com" },
+  sponsor("Graylog", "Blue", "https://graylog.org"),
+  sponsor("Hack The Box", "Platinum", "https://hackthebox.com"),
+  sponsor("FLARE", "Gold", "https://flare.io"),
+  sponsor("TryHackMe", "Gold", "https://tryhackme.com"),
+  sponsor("DeepTempo", "Gold", "https://deeptempo.ai"),
+  sponsor("ACyberGurus", "Gold", "https://acybergurus.com"),
 ];
 
 const sixTracks = [
@@ -482,6 +515,72 @@ export const fallbackPages: Page[] = [
     seoDescription:
       "Blue Team Village's defensive Capture the Flag events at DEF CON.",
   },
+];
+
+/*
+ * Home-page timeline. Ported from the btv2 redesign mockup, with the
+ * anniversary framing kept forward-looking: DEF CON 34 (2026) is BTV's 9th
+ * year, so the 10th anniversary lands at DEF CON 35.
+ */
+export const fallbackMilestones: Milestone[] = [
+  {
+    year: "2018",
+    title: "A village is born",
+    body: "BTV forms through conversations that started on Twitter — a small group of defenders imagining what a defense-focused DEF CON village could look like. In weeks it was organizing itself and recruiting volunteers.",
+  },
+  {
+    year: "2018 · DEF CON 26",
+    title: "First DEF CON appearance",
+    body: "BTV debuts in Las Vegas with founding organizers munin, ttheveii0x, devnull, V3rbaal, and H4r0ld at the helm.",
+  },
+  {
+    year: "2019 · DEF CON 27",
+    title: "Growing the community",
+    body: "Year two brings expanded programming, more hands-on content, and a rapidly growing global community of cyber defenders.",
+  },
+  {
+    year: "2020 · DEF CON Safe Mode",
+    title: "Going virtual",
+    body: "BTV pivots to a fully online format, reaching defenders worldwide during the pandemic — proving the community transcends any single venue.",
+  },
+  {
+    year: "2021",
+    title: "Nonprofit status",
+    body: "The Association of Blue Team Villages is a Pennsylvania domestic nonprofit corporation, classified as a public charity exempt from federal income tax under IRC 501(c)(3).",
+  },
+  {
+    year: "2022 · DEF CON 30",
+    title: "Project Obsidian launches",
+    body: "BTV introduces Project Obsidian — free, immersive defensive training spanning incident response, forensics, malware analysis, threat intel, and threat hunting.",
+  },
+  {
+    year: "2023 · DEF CON 31",
+    title: "Meet-a-Mentor begins",
+    body: "Meet-a-Mentor pairs aspiring defenders with experienced practitioners, extending BTV's mission far beyond the conference floor.",
+  },
+  {
+    year: "2024–2025 · DEF CON 32–33",
+    title: "Six tracks, record attendance",
+    body: "Content settles into six tracks — IR, forensics, threat hunting, detection engineering, OT, and insider risk — alongside the CTF and community gatherings.",
+  },
+  {
+    year: "2026 · DEF CON 34",
+    title: "Our 9th year",
+    body: "BTV returns to Las Vegas August 6–9 with talks, workshops, contests, and the Project Obsidian CTF.",
+  },
+  {
+    year: "2027 · DEF CON 35",
+    title: "10th anniversary",
+    body: "A decade of defending, teaching, and building one of security's most welcoming communities. Save the date.",
+  },
+];
+
+/* Home-page stat row. */
+export const fallbackStats: Stat[] = [
+  { value: "9", label: "Years at DEF CON" },
+  { value: "6", label: "Content tracks" },
+  { value: "10k", suffix: "+", label: "Discord members" },
+  { value: "501(c)(3)", label: "Nonprofit charity" },
 ];
 
 export const fallbackPosts: BlogPost[] = [

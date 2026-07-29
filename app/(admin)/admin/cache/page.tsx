@@ -12,7 +12,7 @@ export default async function CachePage() {
   const session = await auth();
   if (session?.user?.role !== "admin") {
     return (
-      <p className="log-line text-magenta">
+      <p className="font-mono text-xs text-mint text-magenta">
         [alert] 403 :: this tool requires the admin role
         (btv-website-admins@blueteamvillage.org)
       </p>
@@ -38,11 +38,11 @@ export default async function CachePage() {
   return (
     <div className="max-w-2xl space-y-8">
       <div className="rounded-lg border border-teal/60 bg-navy p-6">
-        <p className="log-line">[cache] upstash status</p>
+        <p className="font-mono text-xs text-mint">[cache] upstash status</p>
         <p className="mt-2 text-mist">
           Connected.{" "}
           {keyCount !== null && (
-            <span className="text-foam">{keyCount} keys in the database.</span>
+            <span className="text-fog">{keyCount} keys in the database.</span>
           )}{" "}
           Content entries cache for 1 hour; group lookups for 10 minutes.
           Contentful publishes purge affected keys automatically via webhook —

@@ -13,7 +13,7 @@ export default async function PreviewPage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div className="rounded-lg border border-teal/60 bg-navy p-6">
-        <p className="log-line">
+        <p className="font-mono text-xs text-mint">
           [preview] draft mode: {isEnabled ? "enabled" : "disabled"}
         </p>
         <p className="mt-2 text-mist">
@@ -30,7 +30,7 @@ export default async function PreviewPage() {
           // eslint-disable-next-line @next/next/no-html-link-for-pages
           <a
             href="/api/preview/disable?redirect=/admin/preview"
-            className="rounded bg-gold px-5 py-3 font-black text-abyss hover:brightness-110"
+            className="rounded bg-gold px-5 py-3 font-black text-navy-deep hover:brightness-110"
           >
             Disable draft mode
           </a>
@@ -38,7 +38,7 @@ export default async function PreviewPage() {
           // eslint-disable-next-line @next/next/no-html-link-for-pages
           <a
             href="/api/preview?redirect=/"
-            className="rounded bg-gold px-5 py-3 font-black text-abyss hover:brightness-110"
+            className="rounded bg-gold px-5 py-3 font-black text-navy-deep hover:brightness-110"
           >
             Enable draft mode &amp; view site
           </a>

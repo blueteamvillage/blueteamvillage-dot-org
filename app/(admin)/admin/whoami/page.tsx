@@ -16,31 +16,31 @@ export default async function WhoAmIPage() {
   return (
     <div className="space-y-8">
       <div className="rounded-lg border border-teal/60 bg-navy p-6">
-        <p className="log-line">[jwt] identity</p>
+        <p className="font-mono text-xs text-mint">[jwt] identity</p>
         <dl className="mt-4 grid gap-x-8 gap-y-3 text-sm sm:grid-cols-[10rem_1fr]">
           <dt className="font-bold text-mist">Email</dt>
-          <dd className="text-foam">{user.email}</dd>
+          <dd className="text-fog">{user.email}</dd>
           <dt className="font-bold text-mist">Name</dt>
-          <dd className="text-foam">{user.name ?? "—"}</dd>
+          <dd className="text-fog">{user.name ?? "—"}</dd>
           <dt className="font-bold text-mist">Resolved role</dt>
           <dd>
             <span
               className={`rounded-full px-3 py-1 text-xs font-black ${
                 user.role === "admin"
-                  ? "bg-gold text-abyss"
-                  : "bg-teal text-foam"
+                  ? "bg-gold text-navy-deep"
+                  : "bg-teal text-fog"
               }`}
             >
               {user.role}
             </span>
           </dd>
           <dt className="font-bold text-mist">Session expires</dt>
-          <dd className="text-foam">{session.expires}</dd>
+          <dd className="text-fog">{session.expires}</dd>
         </dl>
       </div>
 
       <div className="rounded-lg border border-teal/60 bg-navy p-6">
-        <p className="log-line">[jwt] workspace groups ({user.groups.length})</p>
+        <p className="font-mono text-xs text-mint">[jwt] workspace groups ({user.groups.length})</p>
         {user.groups.length === 0 ? (
           <p className="mt-3 text-mist">
             No groups on this token. Either the Google Directory integration
@@ -52,11 +52,11 @@ export default async function WhoAmIPage() {
             {user.groups.map((g) => (
               <li
                 key={g}
-                className="flex items-center justify-between rounded border border-teal/40 px-4 py-2 font-mono text-sm text-foam"
+                className="flex items-center justify-between rounded border border-teal/40 px-4 py-2 font-mono text-sm text-fog"
               >
                 {g}
                 {roleGroupMap[g] && (
-                  <span className="rounded-full bg-gold px-2 py-0.5 text-xs font-black text-abyss">
+                  <span className="rounded-full bg-gold px-2 py-0.5 text-xs font-black text-navy-deep">
                     grants {roleGroupMap[g]}
                   </span>
                 )}
@@ -67,8 +67,8 @@ export default async function WhoAmIPage() {
       </div>
 
       <div className="rounded-lg border border-teal/60 bg-navy p-6">
-        <p className="log-line">[jwt] raw session claims</p>
-        <pre className="mt-4 overflow-x-auto rounded bg-abyss p-4 font-mono text-xs text-mint">
+        <p className="font-mono text-xs text-mint">[jwt] raw session claims</p>
+        <pre className="mt-4 overflow-x-auto rounded bg-navy-deep p-4 font-mono text-xs text-mint">
           {JSON.stringify(session, null, 2)}
         </pre>
       </div>

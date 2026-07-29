@@ -23,7 +23,7 @@ export function PurgeButtons() {
           type="button"
           disabled={pending}
           onClick={() => run(purgeContentCache)}
-          className="rounded bg-gold px-5 py-3 font-black text-abyss hover:brightness-110 disabled:opacity-50"
+          className="rounded bg-gold px-5 py-3 font-black text-navy-deep hover:brightness-110 disabled:opacity-50"
         >
           Purge content cache
         </button>
@@ -31,13 +31,13 @@ export function PurgeButtons() {
           type="button"
           disabled={pending}
           onClick={() => run(purgeGroupCache)}
-          className="rounded border border-teal px-5 py-3 font-bold text-foam hover:border-mint hover:text-mint disabled:opacity-50"
+          className="rounded border border-teal px-5 py-3 font-bold text-fog hover:border-mint hover:text-mint disabled:opacity-50"
         >
           Purge group cache
         </button>
       </div>
       {last && (
-        <p className="log-line mt-4">
+        <p className="font-mono text-xs text-mint mt-4">
           [cache] purged {last.purged} keys matching {last.scope} at {last.at}
         </p>
       )}

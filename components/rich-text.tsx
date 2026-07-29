@@ -7,13 +7,13 @@ import type { Body } from "@/types/content";
 const richTextOptions: Options = {
   renderNode: {
     [BLOCKS.HEADING_2]: (_node, children) => (
-      <h2 className="mt-12 text-2xl font-black text-foam">{children}</h2>
+      <h2 className="mt-12 text-2xl font-black text-white">{children}</h2>
     ),
     [BLOCKS.HEADING_3]: (_node, children) => (
-      <h3 className="mt-8 text-xl font-black text-foam">{children}</h3>
+      <h3 className="mt-8 text-xl font-black text-white">{children}</h3>
     ),
     [BLOCKS.PARAGRAPH]: (_node, children) => (
-      <p className="mt-4 leading-relaxed text-foam/90">{children}</p>
+      <p className="mt-4 leading-relaxed text-fog">{children}</p>
     ),
     [BLOCKS.UL_LIST]: (_node, children) => (
       <ul className="mt-4 list-disc space-y-2 pl-6 marker:text-mint">
@@ -34,7 +34,7 @@ const richTextOptions: Options = {
           alt={node.data.target.fields.title ?? ""}
           width={file.details?.image?.width ?? 1200}
           height={file.details?.image?.height ?? 675}
-          className="mt-6 rounded-lg border border-teal/60"
+          className="mt-6 rounded-lg border border-white/[0.06]"
         />
       );
     },
@@ -44,7 +44,7 @@ const richTextOptions: Options = {
       return (
         <a
           href={href}
-          className="text-mint underline underline-offset-4 hover:text-gold"
+          className="text-teal-bright underline underline-offset-4 hover:text-mint"
           {...(external
             ? { target: "_blank", rel: "noopener noreferrer" }
             : {})}
@@ -70,13 +70,13 @@ export function Prose({ body }: { body: Body }) {
         switch (block.type) {
           case "heading":
             return (
-              <h2 key={i} className="mt-12 text-2xl font-black text-foam">
+              <h2 key={i} className="mt-12 text-2xl font-black text-white">
                 {block.text}
               </h2>
             );
           case "paragraph":
             return (
-              <p key={i} className="mt-4 leading-relaxed text-foam/90">
+              <p key={i} className="mt-4 leading-relaxed text-fog">
                 {block.text}
               </p>
             );

@@ -11,7 +11,7 @@ export function UserLookup() {
 
   return (
     <div className="max-w-2xl">
-      <p className="log-line">[directory] group lookup</p>
+      <p className="font-mono text-xs text-mint">[directory] group lookup</p>
       <p className="mt-2 text-sm text-mist">
         Look up any workspace user&apos;s Google groups and the webapp role
         they resolve to. Queries the Directory API live (bypasses cache).
@@ -26,12 +26,12 @@ export function UserLookup() {
           type="email"
           required
           placeholder="user@blueteamvillage.org"
-          className="w-full rounded border border-teal bg-abyss px-4 py-2.5 text-foam placeholder:text-mist/60"
+          className="w-full rounded border border-teal bg-navy-deep px-4 py-2.5 text-fog placeholder:text-mist/60"
         />
         <button
           type="submit"
           disabled={pending}
-          className="rounded bg-gold px-5 py-2.5 font-black text-abyss hover:brightness-110 disabled:opacity-50"
+          className="rounded bg-gold px-5 py-2.5 font-black text-navy-deep hover:brightness-110 disabled:opacity-50"
         >
           {pending ? "Looking up…" : "Look up"}
         </button>
@@ -40,18 +40,18 @@ export function UserLookup() {
       {result && (
         <div className="mt-6 rounded-lg border border-teal/60 bg-navy p-6">
           {result.error ? (
-            <p className="log-line text-magenta">[alert] {result.error}</p>
+            <p className="font-mono text-xs text-mint text-magenta">[alert] {result.error}</p>
           ) : (
             <>
-              <p className="log-line">
+              <p className="font-mono text-xs text-mint">
                 [directory] {result.email} :: resolves to
               </p>
               <p className="mt-2">
                 <span
                   className={`rounded-full px-3 py-1 text-xs font-black ${
                     result.role === "admin"
-                      ? "bg-gold text-abyss"
-                      : "bg-teal text-foam"
+                      ? "bg-gold text-navy-deep"
+                      : "bg-teal text-fog"
                   }`}
                 >
                   {result.role}
@@ -64,7 +64,7 @@ export function UserLookup() {
                   {result.groups.map((g) => (
                     <li
                       key={g}
-                      className="rounded border border-teal/40 px-4 py-2 font-mono text-sm text-foam"
+                      className="rounded border border-teal/40 px-4 py-2 font-mono text-sm text-fog"
                     >
                       {g}
                     </li>

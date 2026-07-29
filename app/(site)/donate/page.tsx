@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/page-header";
 import { Prose } from "@/components/rich-text";
+import { Button } from "@/components/ui/button";
 import { getPage, getSiteSettings } from "@/lib/contentful";
 
 export const revalidate = 3600;
@@ -20,21 +21,28 @@ export default async function DonatePage() {
   return (
     <article>
       <PageHeader
-        logLine="[btv] donate :: tax-deductible"
+        eyebrow="Tax-deductible"
         heading={page?.heroHeading ?? "Fund the defenders"}
       />
-      <div className="mx-auto max-w-4xl px-4">
+      <div className="mx-auto max-w-4xl px-6">
         {page && <Prose body={page.body} />}
-        <p className="mt-10">
-          <a
-            href={`https://www.paypal.com/donate/?hosted_button_id=${settings.paypalButtonId}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block rounded bg-gold px-6 py-4 text-lg font-black text-abyss hover:brightness-110"
+        <div className="mt-10">
+          {/* Gold is the palette's call-to-action colour — the one place the
+              site deliberately steps off the teal button. */}
+          <Button
+            asChild
+            size="lg"
+            className="bg-gold text-navy-deep hover:bg-gold/85"
           >
-            Donate with PayPal ↗
-          </a>
-        </p>
+            <a
+              href={`https://www.paypal.com/donate/?hosted_button_id=${settings.paypalButtonId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Donate with PayPal ↗
+            </a>
+          </Button>
+        </div>
       </div>
     </article>
   );
