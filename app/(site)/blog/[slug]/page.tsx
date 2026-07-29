@@ -28,10 +28,10 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <article>
       <PageHeader
-        logLine={`[post] ${post.publishDate}${post.authorHandle ? ` :: by ${post.authorHandle}` : ""}`}
+        eyebrow={`${post.publishDate}${post.authorHandle ? ` · by ${post.authorHandle}` : ""}`}
         heading={post.title}
       />
-      <div className="mx-auto max-w-4xl px-4">
+      <div className="mx-auto max-w-4xl px-6">
         <Prose body={post.body} />
       </div>
     </article>

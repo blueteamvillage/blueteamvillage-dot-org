@@ -23,7 +23,7 @@ function StatusCard({
 }) {
   return (
     <div className="rounded-lg border border-teal/60 bg-navy p-5">
-      <p className="log-line">{label}</p>
+      <p className="font-mono text-xs text-mint">{label}</p>
       <p className={`mt-2 font-bold ${ok ? "text-mint" : "text-gold"}`}>
         {ok ? okText : missingText}
       </p>
@@ -65,10 +65,10 @@ export default async function AdminOverview() {
       </div>
 
       <div className="mt-10 rounded-lg border border-teal/60 bg-navy p-6">
-        <p className="log-line">[session] {session?.user?.email}</p>
+        <p className="font-mono text-xs text-mint">[session] {session?.user?.email}</p>
         <p className="mt-2 text-mist">
           You are signed in with role{" "}
-          <span className="font-bold text-foam">{session?.user?.role}</span>.
+          <span className="font-bold text-fog">{session?.user?.role}</span>.
           Inspect your full token on{" "}
           <Link href="/admin/whoami" className="text-mint underline">
             Who am I

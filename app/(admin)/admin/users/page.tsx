@@ -12,7 +12,7 @@ export default async function UsersPage() {
   const session = await auth();
   if (session?.user?.role !== "admin") {
     return (
-      <p className="log-line text-magenta">
+      <p className="font-mono text-xs text-mint text-magenta">
         [alert] 403 :: this tool requires the admin role
         (btv-website-admins@blueteamvillage.org)
       </p>

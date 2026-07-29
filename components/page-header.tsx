@@ -1,19 +1,23 @@
+import { Eyebrow } from "@/components/site/eyebrow";
+
 export function PageHeader({
-  logLine,
+  eyebrow,
   heading,
   sub,
 }: {
-  logLine: string;
+  eyebrow: string;
   heading: string;
   sub?: string;
 }) {
   return (
-    <div className="mx-auto max-w-4xl px-4 pt-16">
-      <p className="log-line">{logLine}</p>
-      <h1 className="mt-3 text-4xl font-black text-foam sm:text-5xl">
+    <div className="mx-auto max-w-4xl px-6 pt-16">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h1 className="mt-3 text-4xl font-black tracking-tight text-white md:text-5xl">
         {heading}
       </h1>
-      {sub && <p className="mt-4 max-w-2xl text-lg text-mist">{sub}</p>}
+      {sub && (
+        <p className="mt-4 max-w-2xl text-lg leading-relaxed text-mist">{sub}</p>
+      )}
     </div>
   );
 }

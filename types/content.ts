@@ -13,6 +13,23 @@ export interface Sponsor {
   tier: SponsorTier;
   url: string;
   logoUrl?: string;
+  /** One-line description shown under the logo. Not yet a Contentful field
+   *  on `websiteSponsor` — mapped optimistically, seeded from code. */
+  blurb?: string;
+}
+
+/** A year in BTV's history, rendered on the home-page timeline. */
+export interface Milestone {
+  year: string;
+  title: string;
+  body: string;
+}
+
+/** A single figure in the home-page stat row. */
+export interface Stat {
+  value: string;
+  label: string;
+  suffix?: string;
 }
 
 /**
@@ -86,4 +103,9 @@ export interface SiteSettings {
   scheduleUrl: string;
   paypalButtonId: string;
   legalBlock: string[];
+  /** Header announcement bar. Off unless `announcementEnabled` and text are
+   *  both set. Not yet Contentful-backed on `websiteSettings`. */
+  announcementEnabled?: boolean;
+  announcementText?: string;
+  announcementUrl?: string;
 }

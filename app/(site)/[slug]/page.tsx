@@ -28,11 +28,11 @@ export default async function CmsPage({ params }: Props) {
   return (
     <article>
       <PageHeader
-        logLine={`[btv] page: ${page.slug}`}
+        eyebrow={page.title}
         heading={page.heroHeading ?? page.title}
         sub={page.heroSubheading}
       />
-      <div className="mx-auto max-w-4xl px-4">
+      <div className="mx-auto max-w-4xl px-6">
         <Prose body={page.body} />
       </div>
     </article>

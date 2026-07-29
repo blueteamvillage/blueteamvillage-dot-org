@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { Prose } from "@/components/rich-text";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { getProgram, getPrograms, getSiteSettings } from "@/lib/contentful";
 
 export const revalidate = 3600;
@@ -31,19 +33,16 @@ export default async function ProgramPage({ params }: Props) {
   return (
     <article>
       <PageHeader
-        logLine={`[btv] program: ${program.slug}`}
+        eyebrow="Program"
         heading={program.name}
         sub={program.summary}
       />
-      <div className="mx-auto max-w-4xl px-4">
+      <div className="mx-auto max-w-4xl px-6">
         {program.disciplines.length > 0 && (
           <ul className="mt-8 flex flex-wrap gap-2">
             {program.disciplines.map((d) => (
-              <li
-                key={d}
-                className="rounded-full border border-cyan px-4 py-1.5 text-sm font-bold text-foam"
-              >
-                {d}
+              <li key={d}>
+                <Badge variant="outline">{d}</Badge>
               </li>
             ))}
           </ul>
@@ -51,25 +50,27 @@ export default async function ProgramPage({ params }: Props) {
 
         <Prose body={program.body} />
 
-        <div className="mt-10 flex flex-wrap gap-3">
+        <div className="mt-10 flex flex-col gap-3 sm:flex-row">
           {program.intakeFormUrl && (
+            <Button asChild size="lg">
+              <a
+                href={program.intakeFormUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Sign up ↗
+              </a>
+            </Button>
+          )}
+          <Button asChild size="lg" variant="outline">
             <a
-              href={program.intakeFormUrl}
+              href={settings.discordUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded bg-gold px-5 py-3 font-black text-abyss hover:brightness-110"
             >
-              Sign up ↗
+              Join the Discord ↗
             </a>
-          )}
-          <a
-            href={settings.discordUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded border border-mint px-5 py-3 font-bold text-mint hover:bg-mint hover:text-abyss"
-          >
-            Join the Discord ↗
-          </a>
+          </Button>
         </div>
       </div>
     </article>
