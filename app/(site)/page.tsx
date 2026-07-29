@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -25,8 +26,16 @@ import {
   getSiteSettings,
 } from "@/lib/contentful";
 import { fallbackStats } from "@/lib/fallback-content";
+import { pageMeta } from "@/lib/seo";
 
 export const revalidate = 3600;
+
+export const metadata: Metadata = pageMeta({
+  title: "Blue Team Village",
+  description:
+    "Blue Team Village (BTV) is a place and a community built for and by defenders. Welcome to the other side of the hacking mirror.",
+  path: "/",
+});
 
 const VALUES = [
   "Excellence",

@@ -31,7 +31,13 @@ const richTextOptions: Options = {
       return (
         <Image
           src={`https:${file.url}`}
-          alt={node.data.target.fields.title ?? ""}
+          /* Contentful's description field is the alt text; title is the
+             asset's filename-ish label, so it's only a fallback. */
+          alt={
+            node.data.target.fields.description ??
+            node.data.target.fields.title ??
+            ""
+          }
           width={file.details?.image?.width ?? 1200}
           height={file.details?.image?.height ?? 675}
           className="mt-6 rounded-lg border border-white/[0.06]"

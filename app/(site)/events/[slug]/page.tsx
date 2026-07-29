@@ -2,11 +2,19 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { Prose } from "@/components/rich-text";
+import { JsonLd } from "@/components/seo/json-ld";
 import { Eyebrow } from "@/components/site/eyebrow";
 import { SponsorGrid } from "@/components/sponsor-grid";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getCurrentSponsors, getEvent, getEvents } from "@/lib/contentful";
+import {
+  getCurrentSponsors,
+  getEvent,
+  getEvents,
+  getSiteSettings,
+} from "@/lib/contentful";
+import { breadcrumbSchema, eventSchema } from "@/lib/schema";
+import { pageMeta } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -21,12 +29,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const event = await getEvent(slug);
   if (!event) return {};
-  return { title: event.title, description: event.tagline };
+  return pageMeta({
+    title: event.title,
+    description: event.tagline,
+    path: `/events/${event.slug}`,
+  });
 }
 
 export default async function EventPage({ params }: Props) {
   const { slug } = await params;
-  const event = await getEvent(slug);
+  const [event, settings] = await Promise.all([
+    getEvent(slug),
+    getSiteSettings(),
+  ]);
   if (!event) notFound();
 
   /*
@@ -37,6 +52,14 @@ export default async function EventPage({ params }: Props) {
 
   return (
     <article>
+      <JsonLd data={eventSchema(event, settings)} />
+      <JsonLd
+        data={breadcrumbSchema([
+          ["Home", "/"],
+          ["Events", "/events"],
+          [event.title, `/events/${event.slug}`],
+        ])}
+      />
       <PageHeader
         eyebrow={event.dateRange}
         heading={event.title}

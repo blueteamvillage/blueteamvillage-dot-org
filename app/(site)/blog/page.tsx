@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHeader } from "@/components/page-header";
 import { getPosts } from "@/lib/contentful";
+import { pageMeta } from "@/lib/seo";
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Blog",
   description: "News and notes from Blue Team Village.",
-};
+  path: "/blog",
+});
 
 export default async function BlogPage() {
   const posts = await getPosts();
