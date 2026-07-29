@@ -46,6 +46,9 @@ const PROGRAM_ICONS = {
   "meet-a-mentor": { icon: Handshake, tone: "mint" },
 } as const;
 
+/** Project Obsidian and the CTF are the same program, so its card links out. */
+const OBSIDIAN_SLUG = "project-obsidian";
+
 const BLUE_TIER_PERKS = [
   "Exclusive presenting-sponsor placement on all BTV materials",
   "Featured speaking or workshop slot at DEF CON",
@@ -138,7 +141,7 @@ export default async function HomePage() {
 
       {/* Stat row */}
       <section className="mx-auto max-w-6xl px-6">
-        <div className="grid grid-cols-2 gap-4 rounded-lg border border-white/[0.06] bg-navy-card p-6 sm:p-8 lg:grid-cols-4">
+        <div className="grid gap-4 rounded-lg border border-white/[0.06] bg-navy-card p-6 sm:grid-cols-3 sm:p-8">
           {fallbackStats.map((stat) => (
             <div key={stat.label}>
               <p className="text-3xl font-black text-white sm:text-4xl">
@@ -228,7 +231,7 @@ export default async function HomePage() {
           </Button>
         </div>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-3">
+        <div className="mt-8 grid gap-6 sm:grid-cols-2">
           {programs.map((program) => {
             const art = PROGRAM_ICONS[
               program.slug as keyof typeof PROGRAM_ICONS
@@ -247,44 +250,30 @@ export default async function HomePage() {
                   <p className="flex-1 text-sm leading-relaxed text-mist">
                     {program.summary}
                   </p>
-                  <Link
-                    href={`/programs/${program.slug}`}
-                    className="inline-flex items-center gap-1.5 text-sm font-bold text-teal-bright transition-colors hover:text-mint"
-                  >
-                    Learn more
-                    <ArrowRight className="h-4 w-4" aria-hidden />
-                  </Link>
+                  <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+                    <Link
+                      href={`/programs/${program.slug}`}
+                      className="inline-flex items-center gap-1.5 text-sm font-bold text-teal-bright transition-colors hover:text-mint"
+                    >
+                      Learn more
+                      <ArrowRight className="h-4 w-4" aria-hidden />
+                    </Link>
+                    {/* The CTF *is* Project Obsidian, run on its own site. */}
+                    {program.slug === OBSIDIAN_SLUG && (
+                      <a
+                        href={settings.ctfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm font-bold text-teal-bright transition-colors hover:text-mint"
+                      >
+                        Play the CTF ↗
+                      </a>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             );
           })}
-
-          {/* The CTF lives on its own site, but reads as a program here. */}
-          <Card className="gap-4">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <IconChip icon={Flag} tone="gold" />
-                <CardTitle className="text-lg leading-tight">
-                  Capture the Flag
-                </CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent className="flex flex-1 flex-col gap-4">
-              <p className="flex-1 text-sm leading-relaxed text-mist">
-                Put your defensive skills to the test in BTV&apos;s annual CTF —
-                real-world forensic scenarios built to sharpen the skills that
-                matter most to defenders.
-              </p>
-              <a
-                href={settings.ctfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-bold text-teal-bright transition-colors hover:text-mint"
-              >
-                Visit the CTF site ↗
-              </a>
-            </CardContent>
-          </Card>
         </div>
       </section>
 
@@ -402,6 +391,31 @@ export default async function HomePage() {
             </a>
           </Button>
         </div>
+
+        <p className="mt-10 text-sm text-mist">
+          Follow along between events:
+        </p>
+        <ul className="mt-3 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+          {settings.socialLinks.map((social) => (
+            <li key={social.href} className="flex items-center gap-2">
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-mist">
+                {social.label}
+              </span>
+              <a
+                href={social.href}
+                target="_blank"
+                rel={
+                  social.verifiable
+                    ? "me noopener noreferrer"
+                    : "noopener noreferrer"
+                }
+                className="font-mono text-sm text-teal-bright transition-colors hover:text-mint"
+              >
+                {social.handle}
+              </a>
+            </li>
+          ))}
+        </ul>
       </section>
 
       {/* Sponsors */}
