@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Lato, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import { SITE_URL } from "@/lib/seo";
+import { IS_PREVIEW, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 /* Same two faces as ctf.blueteamvillage.org — Lato for everything, Geist
@@ -40,16 +40,18 @@ export const metadata: Metadata = {
     site: "@blueteamvillage",
     creator: "@blueteamvillage",
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
+  robots: IS_PREVIEW
+    ? { index: false, follow: false }
+    : {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          "max-image-preview": "large",
+          "max-snippet": -1,
+        },
+      },
 };
 
 /* Colours the browser chrome on mobile to match the site's canvas. */
