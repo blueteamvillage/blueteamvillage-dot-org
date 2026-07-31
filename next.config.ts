@@ -35,6 +35,13 @@ const nextConfig: NextConfig = {
         destination: "/blog/thank-you-project-obsidian-cr3w",
         permanent: true,
       },
+      // Meet-a-Mentor is retired; both legacy paths were live on WordPress
+      {
+        source: "/programs/meet-a-mentor",
+        destination: "/programs",
+        permanent: true,
+      },
+      { source: "/meet-a-mentor", destination: "/programs", permanent: true },
       // External services that lived on site paths
       {
         source: "/shop",

@@ -50,7 +50,6 @@ export const fallbackSettings: SiteSettings = {
       children: [
         { label: "Project Obsidian", href: "/programs/project-obsidian" },
         { label: "Venator Aurum", href: "/programs/venator-aurum" },
-        { label: "Meet-a-Mentor", href: "/programs/meet-a-mentor" },
       ],
     },
     {
@@ -429,44 +428,6 @@ export const fallbackPrograms: Program[] = [
     order: 1,
   },
   {
-    name: "Meet-a-Mentor",
-    slug: "meet-a-mentor",
-    summary:
-      "One-on-one mentorship pairing experienced security professionals with mentees based on shared interests.",
-    body: {
-      kind: "blocks",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "Meet-a-Mentor pairs experienced security professionals with mentees based on shared interests, to develop career goals and skills.",
-        },
-        { type: "heading", text: "How it works" },
-        {
-          type: "list",
-          items: [
-            "One-on-one pairings typically last 3–6 months",
-            "Mentors are vetted by BTV staff and existing mentors",
-            "The matching waitlist can run 6–9 months — a community-participant tier is available without a pairing",
-            "Monthly meetups feature panels, lightning talks, and BTV content",
-            "Program content lives on the BTV Discord in role-restricted sections",
-          ],
-        },
-        {
-          type: "paragraph",
-          text: "All participants agree to the DEF CON Code of Conduct.",
-        },
-        { type: "heading", text: "Join the program" },
-        {
-          type: "paragraph",
-          text: "Sign up through the intake form, or share your experience through the feedback form. Program details are available in the Meet-a-Mentor information folder.",
-        },
-      ],
-    },
-    disciplines: [],
-    intakeFormUrl: "https://forms.gle/zUA64NVtDWezyUoB6",
-    order: 2,
-  },
-  {
     name: "Venator Aurum",
     slug: "venator-aurum",
     summary:
@@ -648,7 +609,7 @@ export const fallbackPages: Page[] = [
       blocks: [
         {
           type: "paragraph",
-          text: "The Association of Blue Team Villages is a Pennsylvania domestic nonprofit corporation and a federally tax-exempt 501(c)(3) public charity. Your donation is tax-deductible and directly funds free defender education, Project Obsidian, Meet-a-Mentor, and BTV's presence at DEF CON.",
+          text: "The Association of Blue Team Villages is a Pennsylvania domestic nonprofit corporation and a federally tax-exempt 501(c)(3) public charity. Your donation is tax-deductible and directly funds free defender education, Project Obsidian, and BTV's presence at DEF CON.",
         },
         {
           type: "paragraph",
@@ -668,7 +629,7 @@ export const fallbackPages: Page[] = [
       blocks: [
         {
           type: "paragraph",
-          text: "Blue Team Village partners with organizations that want to support the defender community. Sponsorship funds free training, hands-on labs, mentorship, and our village at DEF CON.",
+          text: "Blue Team Village partners with organizations that want to support the defender community. Sponsorship funds free training, hands-on labs, and our village at DEF CON.",
         },
         {
           type: "paragraph",

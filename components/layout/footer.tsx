@@ -6,7 +6,6 @@ import type { SiteSettings } from "@/types/content";
 const programLinks = [
   { href: "/programs/project-obsidian", label: "Project Obsidian" },
   { href: "/programs/venator-aurum", label: "Venator Aurum" },
-  { href: "/programs/meet-a-mentor", label: "Meet-a-Mentor" },
   { href: "/programs", label: "All programs" },
 ];
 
