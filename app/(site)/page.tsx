@@ -44,7 +44,6 @@ const VALUES = [
   "Integrity",
   "Community",
   "Education",
-  "Mentoring",
   "Support",
   "Encouragement",
 ];
