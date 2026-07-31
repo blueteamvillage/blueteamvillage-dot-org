@@ -487,7 +487,6 @@ export const fallbackPages: Page[] = [
             "Integrity",
             "Community",
             "Education",
-            "Mentoring",
             "Support",
             "Encouragement",
           ],

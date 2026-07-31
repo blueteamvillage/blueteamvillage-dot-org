@@ -37,16 +37,24 @@ export const metadata: Metadata = pageMeta({
   path: "/",
 });
 
-const VALUES = [
-  "Excellence",
-  "Inclusion",
-  "Transparency",
-  "Integrity",
-  "Community",
-  "Education",
-  "Mentoring",
-  "Support",
-  "Encouragement",
+/*
+ * Values / Mission / Vision, in the order and wording BTV publishes them.
+ * Values leads because it frames the other two ("to accomplish our Mission
+ * and Vision, we Value…").
+ */
+const FOUNDATION = [
+  {
+    title: "Values",
+    body: "To embody the highest ideals and accomplish our Mission and Vision, we Value: Excellence, Inclusion, Transparency, Integrity, Community, Education, Support, and Encouragement.",
+  },
+  {
+    title: "Mission",
+    body: "To curate content and create global, safe, and inclusive spaces designed to foster sharing, learning, community, support and encouragement for all cyber defenders regardless of skill level.",
+  },
+  {
+    title: "Vision",
+    body: "To be the premier organization supporting the cyber defender community. To build a community that encourages, teaches, learns, and shares experiences and knowledge. To be the model for what a cyber defender community should embody.",
+  },
 ];
 
 /* Programs are CMS-driven; the icon per slug is presentation, so it lives here. */
@@ -182,44 +190,16 @@ export default async function HomePage() {
         </p>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-3">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Mission</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="leading-relaxed text-mist">
-                To curate content and create global, safe, and inclusive spaces
-                designed to foster sharing, learning, community, support and
-                encouragement for all cyber defenders regardless of skill level.
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Vision</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="leading-relaxed text-mist">
-                To be the premier organization supporting the cyber defender
-                community — one that encourages, teaches, learns, and shares
-                experiences and knowledge.
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Values</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="flex flex-wrap gap-2">
-                {VALUES.map((value) => (
-                  <li key={value}>
-                    <Badge variant="outline">{value}</Badge>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
+          {FOUNDATION.map((item) => (
+            <Card key={item.title}>
+              <CardHeader>
+                <CardTitle className="text-lg">{item.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="leading-relaxed text-mist">{item.body}</p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </section>
 
