@@ -6,7 +6,6 @@ import {
   Award,
   Flag,
   GraduationCap,
-  Handshake,
   Puzzle,
   Search,
   ShieldCheck,
@@ -53,7 +52,6 @@ const VALUES = [
 /* Programs are CMS-driven; the icon per slug is presentation, so it lives here. */
 const PROGRAM_ICONS = {
   "project-obsidian": { icon: GraduationCap, tone: "teal" },
-  "meet-a-mentor": { icon: Handshake, tone: "mint" },
   "venator-aurum": { icon: Puzzle, tone: "gold" },
 } as const;
 
@@ -505,7 +503,7 @@ export default async function HomePage() {
           </h2>
           <p className="mt-4 max-w-2xl leading-relaxed text-mist">
             BTV runs on community support. Your tax-deductible donation funds
-            free training, mentorship, and our village at DEF CON.
+            free training, hands-on labs, and our village at DEF CON.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg">
