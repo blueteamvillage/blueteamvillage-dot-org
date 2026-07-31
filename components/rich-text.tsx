@@ -4,6 +4,32 @@ import { BLOCKS, INLINES } from "@contentful/rich-text-types";
 import type { Options } from "@contentful/rich-text-react-renderer";
 import type { Body } from "@/types/content";
 
+/*
+ * Fallback blocks are plain strings, but bare BTV hosts read as links on the
+ * page — Contentful rich text marks them up, and local/CI rendering shouldn't
+ * diverge from production. Matches full URLs and any *.blueteamvillage.org.
+ */
+const LINKABLE =
+  /((?:https?:\/\/)?(?:[a-z0-9-]+\.)+blueteamvillage\.org(?:\/[^\s]*)?)/gi;
+
+function linkify(text: string) {
+  return text.split(LINKABLE).map((part, i) => {
+    if (i % 2 === 0) return part;
+    const href = part.startsWith("http") ? part : `https://${part}`;
+    return (
+      <a
+        key={i}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-teal-bright underline decoration-teal/40 underline-offset-4 transition-colors hover:text-mint"
+      >
+        {part}
+      </a>
+    );
+  });
+}
+
 const richTextOptions: Options = {
   renderNode: {
     [BLOCKS.HEADING_2]: (_node, children) => (
@@ -83,7 +109,7 @@ export function Prose({ body }: { body: Body }) {
           case "paragraph":
             return (
               <p key={i} className="mt-4 leading-relaxed text-fog">
-                {block.text}
+                {linkify(block.text)}
               </p>
             );
           case "list":
@@ -93,7 +119,7 @@ export function Prose({ body }: { body: Body }) {
                 className="mt-4 list-disc space-y-2 pl-6 marker:text-mint"
               >
                 {block.items.map((item) => (
-                  <li key={item}>{item}</li>
+                  <li key={item}>{linkify(item)}</li>
                 ))}
               </ul>
             );

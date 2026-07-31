@@ -1,7 +1,6 @@
 import type {
   BlogPost,
   EventItem,
-  Milestone,
   Page,
   Program,
   SiteSettings,
@@ -50,6 +49,7 @@ export const fallbackSettings: SiteSettings = {
       href: "/programs",
       children: [
         { label: "Project Obsidian", href: "/programs/project-obsidian" },
+        { label: "Venator Aurum", href: "/programs/venator-aurum" },
         { label: "Meet-a-Mentor", href: "/programs/meet-a-mentor" },
       ],
     },
@@ -466,6 +466,27 @@ export const fallbackPrograms: Program[] = [
     intakeFormUrl: "https://forms.gle/zUA64NVtDWezyUoB6",
     order: 2,
   },
+  {
+    name: "Venator Aurum",
+    slug: "venator-aurum",
+    summary:
+      "A puzzle-driven CTF adventure where every cipher, puzzle, and anomaly is a thread in one overarching meta-puzzle.",
+    body: {
+      kind: "blocks",
+      blocks: [
+        {
+          type: "paragraph",
+          text: "Venator Aurum is a puzzle-driven CTF adventure where your mind is your greatest weapon and every challenge tests the limits of your cybersecurity knowledge and critical thinking skills.",
+        },
+        {
+          type: "paragraph",
+          text: "Each cipher you decrypt, each puzzle you solve, each anomaly you uncover is part of a larger design. Hidden threads weave through the challenges, forming an overarching meta-puzzle, a carefully constructed labyrinth that only the most observant and clever hackers can escape. The deeper you go, the clearer the pattern becomes, until suddenly, everything connects.",
+        },
+      ],
+    },
+    disciplines: [],
+    order: 3,
+  },
 ];
 
 export const fallbackPages: Page[] = [
@@ -524,45 +545,68 @@ export const fallbackPages: Page[] = [
     title: "Code of Conduct",
     slug: "code-of-conduct",
     heroHeading: "Code of Conduct",
+    heroSubheading:
+      "Respectful, inclusive debate that advances knowledge and understanding.",
     body: {
       kind: "blocks",
       blocks: [
-        { type: "heading", text: "Core values" },
         {
           type: "paragraph",
-          text: "Blue Team Village is dedicated to providing a safe and inclusive experience for everyone. We expect every participant to embody our values: excellence, inclusion, transparency, integrity, community, education, mentoring, support, and encouragement.",
+          text: "Blue Team Village values respectful and inclusive debate that advances knowledge and understanding. However we will not tolerate disrespectful, threatening, or demeaning language or actions that make any member of the community feel unwelcome or threatened.",
         },
-        { type: "heading", text: "Harassment policy" },
         {
           type: "paragraph",
-          text: "BTV has zero tolerance for harassment. Participants violating this policy may be expelled from BTV spaces and events.",
+          text: "We are devoted to creating a safe, friendly, and welcoming environment. We expect your behaviors to contribute to this. It's not about what you look like but what's in your mind and how you present yourself that counts.",
         },
-        { type: "heading", text: "Community guidelines" },
+        { type: "heading", text: "Harassment" },
+        {
+          type: "paragraph",
+          text: "We do not condone harassment against any participant, for any reason. Harassment includes deliberate intimidation and targeting individuals in a manner that makes them feel uncomfortable, unwelcome, or afraid.",
+        },
+        {
+          type: "paragraph",
+          text: "Participants asked to stop any harassing behavior are expected to comply immediately. We reserve the right to respond to harassment in the manner we deem appropriate, including but not limited to expulsion from the community and referral to the relevant authorities.",
+        },
+        { type: "heading", text: "General guidelines" },
+        {
+          type: "paragraph",
+          text: "We have set out the following general guidelines to help ensure that members of our community feel safe and welcome:",
+        },
         {
           type: "list",
           items: [
-            "Be kind and inclusive",
-            "No harassment or deliberate intimidation",
-            "No trolling, spamming, or flaming",
-            "No hate speech — racism, sexism, homophobia, transphobia, and ableism are not tolerated",
-            "Selling anything in BTV spaces is prohibited",
-            "Disagreement is fine; personal attacks never are",
+            "Be kind and courteous to others, and use welcoming and inclusive language. Show empathy for others, and be respectful of different viewpoints and opinions.",
+            "Trolling, spamming, flaming, etc. will not be permitted.",
+            "Keep differences of opinion structured, constructive, and where they are wanted. Likewise accept differing opinions gracefully and with consideration for others. Remember that we all walk different paths.",
+            "Differing ideas are welcome, but attacks are never acceptable.",
+            "Hate speech such as racism, sexism, homophobia, transphobia, ableism, etc. is completely unacceptable and will not be tolerated.",
+            "Private harassment, including the above, will also not be tolerated. If you feel this is happening to you, please reach out to one of the BTV organizers. We want this community to feel safe for its participants.",
+            "Selling of anything is prohibited.",
           ],
         },
-        { type: "heading", text: "Scope" },
+        { type: "heading", text: "Who this applies to" },
         {
           type: "paragraph",
-          text: "This Code of Conduct applies to all attendees, exhibitors, speakers, volunteers, and community members in every BTV space, online and in person.",
+          text: "This Code of Conduct applies to everyone participating in the BTV community, including attendees, exhibitors, speakers, press, volunteers, and anyone else that participates in our community.",
         },
-        { type: "heading", text: "Reporting" },
+        { type: "heading", text: "Reporting a concern" },
         {
           type: "paragraph",
-          text: "To report a violation, reach out to any BTV organizer. Association of Blue Team Villages, 1657 The Fairway 1150, Jenkintown, PA 19046.",
+          text: "These are standards and moderation guidelines, and as such are followed in spirit, not by letter. If you feel these are being violated, or someone is otherwise making the community unsafe, unwelcome, or uncomfortable, we encourage you to contact one of the BTV organizers.",
+        },
+        { type: "heading", text: "About the organization" },
+        {
+          type: "paragraph",
+          text: "The Association of Blue Team Villages (aka. Blue Team Village) is a Domestic Nonprofit Corporation formed in Pennsylvania, USA and is classified as a public charity exempt from federal income tax under IRC 501(c)(3). EIN: 83-3529393.",
+        },
+        {
+          type: "paragraph",
+          text: "Association of Blue Team Villages, 1657 The Fairway 1150, Jenkintown, PA, 19046.",
         },
       ],
     },
     seoDescription:
-      "Blue Team Village's Code of Conduct: core values, harassment policy, community guidelines, scope, and reporting.",
+      "Blue Team Village's Code of Conduct — the behavior expected of everyone in the BTV community, our harassment policy, and how to report a concern.",
   },
   {
     title: "Support BTV",
@@ -654,64 +698,6 @@ export const fallbackPages: Page[] = [
     },
     seoDescription:
       "Blue Team Village's defensive Capture the Flag events at DEF CON.",
-  },
-];
-
-/*
- * Home-page timeline. Ported from the btv2 redesign mockup, with the
- * anniversary framing kept forward-looking: DEF CON 34 (2026) is BTV's 9th
- * year, so the 10th anniversary lands at DEF CON 35.
- */
-export const fallbackMilestones: Milestone[] = [
-  {
-    year: "2018",
-    title: "A village is born",
-    body: "BTV forms through conversations that started on Twitter — a small group of defenders imagining what a defense-focused DEF CON village could look like. In weeks it was organizing itself and recruiting volunteers.",
-  },
-  {
-    year: "2018 · DEF CON 26",
-    title: "First DEF CON appearance",
-    body: "BTV debuts in Las Vegas with founding organizers munin, ttheveii0x, devnull, V3rbaal, and H4r0ld at the helm.",
-  },
-  {
-    year: "2019 · DEF CON 27",
-    title: "Growing the community",
-    body: "Year two brings expanded programming, more hands-on content, and a rapidly growing global community of cyber defenders.",
-  },
-  {
-    year: "2020 · DEF CON Safe Mode",
-    title: "Going virtual",
-    body: "BTV pivots to a fully online format, reaching defenders worldwide during the pandemic — proving the community transcends any single venue.",
-  },
-  {
-    year: "2021",
-    title: "Nonprofit status",
-    body: "The Association of Blue Team Villages is a Pennsylvania domestic nonprofit corporation, classified as a public charity exempt from federal income tax under IRC 501(c)(3).",
-  },
-  {
-    year: "2022 · DEF CON 30",
-    title: "Project Obsidian launches",
-    body: "BTV introduces Project Obsidian — free, immersive defensive training spanning incident response, forensics, malware analysis, threat intel, and threat hunting.",
-  },
-  {
-    year: "2023 · DEF CON 31",
-    title: "Meet-a-Mentor begins",
-    body: "Meet-a-Mentor pairs aspiring defenders with experienced practitioners, extending BTV's mission far beyond the conference floor.",
-  },
-  {
-    year: "2024–2025 · DEF CON 32–33",
-    title: "Six tracks, record attendance",
-    body: "Content settles into six tracks — IR, forensics, threat hunting, detection engineering, OT, and insider risk — alongside the CTF and community gatherings.",
-  },
-  {
-    year: "2026 · DEF CON 34",
-    title: "Our 9th year",
-    body: "BTV returns to Las Vegas August 7–9 with talks, workshops, contests, and the Project Obsidian CTF.",
-  },
-  {
-    year: "2027 · DEF CON 35",
-    title: "10th anniversary",
-    body: "A decade of defending, teaching, and building one of security's most welcoming communities. Save the date.",
   },
 ];
 

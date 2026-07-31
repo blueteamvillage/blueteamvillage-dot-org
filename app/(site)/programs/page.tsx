@@ -24,7 +24,7 @@ export default async function ProgramsPage() {
         heading="Programs"
         sub="BTV programs are directed by BTV Directors and staffed by volunteers who develop, run, and implement them — year-round, not just at DEF CON."
       />
-      <div className="mx-auto mt-12 grid max-w-4xl gap-6 px-6 md:grid-cols-2">
+      <div className="mx-auto mt-12 grid max-w-6xl gap-6 px-6 sm:grid-cols-2 lg:grid-cols-3">
         {programs.map((p) => (
           <Link
             key={p.slug}

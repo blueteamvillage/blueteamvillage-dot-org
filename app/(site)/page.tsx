@@ -7,6 +7,7 @@ import {
   Flag,
   GraduationCap,
   Handshake,
+  Puzzle,
   Search,
   ShieldCheck,
 } from "lucide-react";
@@ -53,6 +54,7 @@ const VALUES = [
 const PROGRAM_ICONS = {
   "project-obsidian": { icon: GraduationCap, tone: "teal" },
   "meet-a-mentor": { icon: Handshake, tone: "mint" },
+  "venator-aurum": { icon: Puzzle, tone: "gold" },
 } as const;
 
 /** Project Obsidian and the CTF are the same program, so its card links out. */
@@ -240,7 +242,7 @@ export default async function HomePage() {
           </Button>
         </div>
 
-        <div className="mt-8 grid gap-6 sm:grid-cols-2">
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {programs.map((program) => {
             const art = PROGRAM_ICONS[
               program.slug as keyof typeof PROGRAM_ICONS
