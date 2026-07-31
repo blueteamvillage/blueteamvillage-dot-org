@@ -18,12 +18,6 @@ export interface Sponsor {
   blurb?: string;
 }
 
-/** A year in BTV's history, rendered on the home-page timeline. */
-export interface Milestone {
-  year: string;
-  title: string;
-  body: string;
-}
 
 /** A single figure in the home-page stat row. */
 export interface Stat {
