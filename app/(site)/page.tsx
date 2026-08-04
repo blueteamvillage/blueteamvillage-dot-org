@@ -258,6 +258,16 @@ export default async function HomePage() {
                         Play the CTF ↗
                       </a>
                     )}
+                    {program.intakeFormUrl && (
+                      <a
+                        href={program.intakeFormUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm font-bold text-teal-bright transition-colors hover:text-mint"
+                      >
+                        Sign up ↗
+                      </a>
+                    )}
                   </div>
                 </CardContent>
               </Card>
