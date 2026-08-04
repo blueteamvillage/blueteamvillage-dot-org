@@ -1,5 +1,6 @@
 "use server";
 
+import { checkBotId } from "botid/server";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { purgeByPattern } from "./cache";
@@ -7,6 +8,13 @@ import { getGroupsForUser } from "./google-directory";
 import { resolveRole, type Role } from "./rbac";
 
 async function requireAdmin() {
+  // Defense in depth alongside the session check: the /admin POST
+  // paths carry BotID headers (see instrumentation-client.ts), so a
+  // scripted client replaying a stolen session cookie still fails.
+  const { isBot } = await checkBotId();
+  if (isBot) {
+    throw new Error("Access denied");
+  }
   const session = await auth();
   if (session?.user?.role !== "admin") {
     throw new Error("Admin role required");
