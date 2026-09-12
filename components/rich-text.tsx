@@ -30,6 +30,27 @@ function linkify(text: string) {
   });
 }
 
+/*
+ * Contentful hyperlink URIs are author-controlled and land straight in an
+ * href. React does not block `javascript:` or `data:` there, so anyone who can
+ * publish an entry could plant a script link. Contentful's own editor rarely
+ * produces one, but the CMS is a shared space (the CTF site lives in it too)
+ * and the check is a few lines — allowlist the schemes that belong in body
+ * copy and drop the rest.
+ */
+const SAFE_SCHEMES = ["http:", "https:", "mailto:", "tel:"];
+
+function safeHref(uri: string | undefined): string | undefined {
+  if (!uri) return undefined;
+  // Relative links (/programs, #section) never carry a scheme.
+  if (/^[/#?]/.test(uri)) return uri;
+  try {
+    return SAFE_SCHEMES.includes(new URL(uri).protocol) ? uri : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 const richTextOptions: Options = {
   renderNode: {
     [BLOCKS.HEADING_2]: (_node, children) => (
@@ -71,7 +92,10 @@ const richTextOptions: Options = {
       );
     },
     [INLINES.HYPERLINK]: (node, children) => {
-      const href = node.data.uri as string;
+      const href = safeHref(node.data.uri as string);
+      // A rejected URI still renders its text — dropping the words would lose
+      // content, and the link is what's unsafe, not the sentence.
+      if (!href) return <>{children}</>;
       const external = href.startsWith("http");
       return (
         <a

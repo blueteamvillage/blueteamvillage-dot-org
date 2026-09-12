@@ -14,6 +14,7 @@ import type {
   Sponsor,
   SponsorTier,
 } from "@/types/content";
+import { ADMIN_CONSOLE_ENABLED } from "./admin-console";
 import { cacheKey, cachedFetch } from "./cache";
 import {
   fallbackCurrentSponsors,
@@ -51,6 +52,11 @@ const previewClient =
 
 /** draftMode() is only available in request scope (not generateStaticParams). */
 async function isPreview(): Promise<boolean> {
+  // With the console disabled there is no supported way to *enter* draft mode,
+  // but a cookie issued before it was turned off would otherwise keep serving
+  // unpublished entries to that browser. Ignore draft mode outright instead of
+  // depending on anyone visiting /api/preview/disable.
+  if (!ADMIN_CONSOLE_ENABLED) return false;
   try {
     return (await draftMode()).isEnabled;
   } catch {

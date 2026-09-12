@@ -44,15 +44,22 @@ export async function purgeByPattern(pattern: string): Promise<number> {
   if (!redis) return 0;
   let cursor = "0";
   let deleted = 0;
+  // Guard against a cursor that never returns to "0" — a malformed or
+  // numeric-typed cursor would otherwise spin this loop forever against
+  // Upstash, burning requests until the function times out.
+  let iterations = 0;
+  const MAX_ITERATIONS = 1000;
   do {
     const [next, keys] = await redis.scan(cursor, {
       match: pattern,
       count: 100,
     });
-    cursor = next;
+    // The REST API types this as a string, but coerce rather than trust it:
+    // a numeric 0 would fail the `!== "0"` termination check.
+    cursor = String(next);
     if (keys.length > 0) {
       deleted += await redis.del(...keys);
     }
-  } while (cursor !== "0");
+  } while (cursor !== "0" && ++iterations < MAX_ITERATIONS);
   return deleted;
 }

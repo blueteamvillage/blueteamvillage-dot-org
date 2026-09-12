@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { auth, signOut } from "@/auth";
+import { ADMIN_CONSOLE_ENABLED } from "@/lib/admin-console";
 
 /* Belt and braces alongside robots.txt: the console is behind auth, but a
  * signed-in crawler shouldn't index it either. */
@@ -20,6 +21,10 @@ const NAV = [
 export default async function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  // Disabled until BTV has a Google Workspace to authenticate against.
+  // proxy.ts 404s this route too; this is the in-app backstop.
+  if (!ADMIN_CONSOLE_ENABLED) notFound();
+
   // Authoritative gate — proxy.ts is only the cheap edge redirect.
   const session = await auth();
   if (!session?.user) {

@@ -1,0 +1,36 @@
+# Dependabot alerts were already on for this repo, but nothing kept
+# dependencies moving between advisories: "Automated security fixes" was off
+# and no update schedule existed, so a patch only landed if someone noticed.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # One PR per ecosystem cluster rather than per package — a volunteer
+      # project can review three PRs a week, not thirty.
+      next:
+        patterns:
+          - "next"
+          - "eslint-config-next"
+          - "@next/*"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      dev-dependencies:
+        dependency-type: development
+      production-minor-patch:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
