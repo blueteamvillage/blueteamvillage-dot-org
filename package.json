@@ -20,7 +20,7 @@
     "clsx": "^2.1.1",
     "contentful": "^11.12.6",
     "googleapis": "^173.0.0",
-    "lucide-react": "^0.454.0",
+    "lucide-react": "^1.43.0",
     "next": "16.2.10",
     "next-auth": "^5.0.0-beta.31",
     "react": "19.2.4",
