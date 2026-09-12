@@ -1,6 +1,11 @@
-# Dependabot alerts were already on for this repo, but nothing kept
-# dependencies moving between advisories: "Automated security fixes" was off
-# and no update schedule existed, so a patch only landed if someone noticed.
+# Version updates only. Dependabot *security* updates are a repository
+# setting, not part of this file — that toggle ("Automated security fixes")
+# was off and has been enabled separately; the groups below deliberately carry
+# no `applies-to: security-updates`, so advisory-driven PRs stay ungrouped and
+# arrive on their own rather than waiting for the weekly batch.
+#
+# What this file fixes is the other half: nothing was moving dependencies
+# between advisories, so a patch only landed if someone happened to notice.
 version: 2
 updates:
   - package-ecosystem: npm

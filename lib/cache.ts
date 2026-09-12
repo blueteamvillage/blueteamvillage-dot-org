@@ -61,5 +61,15 @@ export async function purgeByPattern(pattern: string): Promise<number> {
       deleted += await redis.del(...keys);
     }
   } while (cursor !== "0" && ++iterations < MAX_ITERATIONS);
+
+  if (cursor !== "0") {
+    // The caller reports `deleted` to an operator as a purge result. Bailing
+    // out silently would read as "purge succeeded" while stale entries remain
+    // and the site keeps serving old content.
+    console.error(
+      `cache purge for ${pattern} hit the ${MAX_ITERATIONS}-scan cap after ` +
+        `${deleted} keys; entries may remain`,
+    );
+  }
   return deleted;
 }

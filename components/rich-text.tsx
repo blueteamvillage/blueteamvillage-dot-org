@@ -39,16 +39,37 @@ function linkify(text: string) {
  * copy and drop the rest.
  */
 const SAFE_SCHEMES = ["http:", "https:", "mailto:", "tel:"];
+const PROBE_ORIGIN = "https://link.invalid";
+/* A bare host — at least one dot — optionally followed by path/query/hash. */
+const HOST_SHAPED = /^[a-z0-9-]+(\.[a-z0-9-]+)+([/?#]|$)/i;
 
 function safeHref(uri: string | undefined): string | undefined {
-  if (!uri) return undefined;
-  // Relative links (/programs, #section) never carry a scheme.
-  if (/^[/#?]/.test(uri)) return uri;
+  const value = uri?.trim();
+  if (!value) return undefined;
+
+  // Same-document links.
+  if (value.startsWith("#") || value.startsWith("?")) return value;
+
+  // Editors paste bare hosts ("ctf.blueteamvillage.org") and Contentful stores
+  // them verbatim. Read those as https rather than dropping the link — same
+  // assumption linkify() below makes for fallback copy.
+  const candidate = HOST_SHAPED.test(value) ? `https://${value}` : value;
+
+  let url: URL;
   try {
-    return SAFE_SCHEMES.includes(new URL(uri).protocol) ? uri : undefined;
+    url = new URL(candidate, PROBE_ORIGIN);
   } catch {
     return undefined;
   }
+
+  // Anything still on the probe origin is a genuine relative path. Note this
+  // is the classification step, not just a scheme check: "//evil.com" and
+  // "/\evil.com" look relative but resolve off-origin, so they fall through
+  // to the scheme allowlist below and get treated as the external links they
+  // are — target/rel included — instead of rendering as internal.
+  if (url.origin === PROBE_ORIGIN) return candidate;
+
+  return SAFE_SCHEMES.includes(url.protocol) ? url.href : undefined;
 }
 
 const richTextOptions: Options = {

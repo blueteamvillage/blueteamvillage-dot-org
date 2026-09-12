@@ -25,7 +25,13 @@ const CSP = [
   "form-action 'self'",
   // Contentful assets, Next's image optimizer, and inline SVG data URIs.
   "img-src 'self' data: blob: https://images.ctfassets.net",
-  "upgrade-insecure-requests",
+  // Production only: `next dev -H 0.0.0.0` reached over the LAN for device
+  // testing is plain http, and this would upgrade HMR and every subresource
+  // to https against a server that doesn't speak it — a blank page with no
+  // obvious cause. localhost is exempt either way.
+  ...(process.env.NODE_ENV === "production"
+    ? ["upgrade-insecure-requests"]
+    : []),
 ].join("; ");
 
 const SECURITY_HEADERS = [
@@ -36,7 +42,9 @@ const SECURITY_HEADERS = [
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   {
     key: "Permissions-Policy",
-    value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+    // No interest-cohort: FLoC was withdrawn and no browser knows the
+    // token, so it only buys a console error on every response.
+    value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
   },
 ];
 
