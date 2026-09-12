@@ -3,11 +3,18 @@
 import { checkBotId } from "botid/server";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
+import { ADMIN_CONSOLE_ENABLED } from "./admin-console";
 import { purgeByPattern } from "./cache";
 import { getGroupsForUser } from "./google-directory";
 import { resolveRole, type Role } from "./rbac";
 
 async function requireAdmin() {
+  // Server actions are POSTs to a page path, reachable independently of
+  // whether the page renders — so the kill switch has to be checked here too,
+  // not just in the admin layout.
+  if (!ADMIN_CONSOLE_ENABLED) {
+    throw new Error("Admin console is disabled");
+  }
   // Defense in depth alongside the session check: the /admin POST
   // paths carry BotID headers (see instrumentation-client.ts), so a
   // scripted client replaying a stolen session cookie still fails.

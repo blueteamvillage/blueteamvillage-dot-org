@@ -30,6 +30,48 @@ function linkify(text: string) {
   });
 }
 
+/*
+ * Contentful hyperlink URIs are author-controlled and land straight in an
+ * href. React does not block `javascript:` or `data:` there, so anyone who can
+ * publish an entry could plant a script link. Contentful's own editor rarely
+ * produces one, but the CMS is a shared space (the CTF site lives in it too)
+ * and the check is a few lines — allowlist the schemes that belong in body
+ * copy and drop the rest.
+ */
+const SAFE_SCHEMES = ["http:", "https:", "mailto:", "tel:"];
+const PROBE_ORIGIN = "https://link.invalid";
+/* A bare host — at least one dot — optionally followed by path/query/hash. */
+const HOST_SHAPED = /^[a-z0-9-]+(\.[a-z0-9-]+)+([/?#]|$)/i;
+
+function safeHref(uri: string | undefined): string | undefined {
+  const value = uri?.trim();
+  if (!value) return undefined;
+
+  // Same-document links.
+  if (value.startsWith("#") || value.startsWith("?")) return value;
+
+  // Editors paste bare hosts ("ctf.blueteamvillage.org") and Contentful stores
+  // them verbatim. Read those as https rather than dropping the link — same
+  // assumption linkify() below makes for fallback copy.
+  const candidate = HOST_SHAPED.test(value) ? `https://${value}` : value;
+
+  let url: URL;
+  try {
+    url = new URL(candidate, PROBE_ORIGIN);
+  } catch {
+    return undefined;
+  }
+
+  // Anything still on the probe origin is a genuine relative path. Note this
+  // is the classification step, not just a scheme check: "//evil.com" and
+  // "/\evil.com" look relative but resolve off-origin, so they fall through
+  // to the scheme allowlist below and get treated as the external links they
+  // are — target/rel included — instead of rendering as internal.
+  if (url.origin === PROBE_ORIGIN) return candidate;
+
+  return SAFE_SCHEMES.includes(url.protocol) ? url.href : undefined;
+}
+
 const richTextOptions: Options = {
   renderNode: {
     [BLOCKS.HEADING_2]: (_node, children) => (
@@ -71,7 +113,10 @@ const richTextOptions: Options = {
       );
     },
     [INLINES.HYPERLINK]: (node, children) => {
-      const href = node.data.uri as string;
+      const href = safeHref(node.data.uri as string);
+      // A rejected URI still renders its text — dropping the words would lose
+      // content, and the link is what's unsafe, not the sentence.
+      if (!href) return <>{children}</>;
       const external = href.startsWith("http");
       return (
         <a

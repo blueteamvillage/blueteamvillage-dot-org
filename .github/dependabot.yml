@@ -1,0 +1,41 @@
+# Version updates only. Dependabot *security* updates are a repository
+# setting, not part of this file — that toggle ("Automated security fixes")
+# was off and has been enabled separately; the groups below deliberately carry
+# no `applies-to: security-updates`, so advisory-driven PRs stay ungrouped and
+# arrive on their own rather than waiting for the weekly batch.
+#
+# What this file fixes is the other half: nothing was moving dependencies
+# between advisories, so a patch only landed if someone happened to notice.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # One PR per ecosystem cluster rather than per package — a volunteer
+      # project can review three PRs a week, not thirty.
+      next:
+        patterns:
+          - "next"
+          - "eslint-config-next"
+          - "@next/*"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      dev-dependencies:
+        dependency-type: development
+      production-minor-patch:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
