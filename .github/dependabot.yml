@@ -16,6 +16,12 @@ updates:
     groups:
       # One PR per ecosystem cluster rather than per package — a volunteer
       # project can review three PRs a week, not thirty.
+      #
+      # `next` and `react` deliberately carry NO update-types restriction, so
+      # majors stay grouped there. These packages must move in lockstep: a
+      # next major with eslint-config-next left behind is the exact version
+      # skew that produced a lint toolchain mismatch before, and react without
+      # react-dom does not run. Splitting them would be the bug, not the fix.
       next:
         patterns:
           - "next"
@@ -27,8 +33,17 @@ updates:
           - "react-dom"
           - "@types/react"
           - "@types/react-dom"
+      # Minor and patch only. Without this restriction the group swept
+      # TypeScript 5 -> 7 and ESLint 9 -> 10 into a single PR (#16), which
+      # failed CI outright: typescript-eslint does not support TS 7 yet, so
+      # one unready major took the whole batch down with it and nothing else
+      # in the group could land. Majors now arrive as individual PRs, each
+      # with its own blast radius and its own CI signal.
       dev-dependencies:
         dependency-type: development
+        update-types:
+          - minor
+          - patch
       production-minor-patch:
         dependency-type: production
         update-types:
